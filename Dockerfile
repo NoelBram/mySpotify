@@ -7,5 +7,5 @@ RUN npm run prod
 
 
 FROM nginx 
-EXPOSE 80
+EXPOSE 4200
 COPY --from=BUILD /app/docs /usr/share/nginx/html

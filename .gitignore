@@ -5,3 +5,8 @@ docs
 docs
 angular
 >>>>>>> 2f0ea50 (Add your commit)
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
