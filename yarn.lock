@@ -3057,18 +3057,24 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 36036a5 ( new updata)
+=======
+>>>>>>> 2f0ea50 (Add your commit)
 "commander@^7.2.0":
   "integrity" "sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw=="
   "resolved" "https://registry.npmjs.org/commander/-/commander-7.2.0.tgz"
   "version" "7.2.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f457f31 (first try)
 =======
 >>>>>>> 36036a5 ( new updata)
+=======
+>>>>>>> 2f0ea50 (Add your commit)
 "commondir@^1.0.1":
   "integrity" "sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg=="
   "resolved" "https://registry.npmjs.org/commondir/-/commondir-1.0.1.tgz"
@@ -5287,8 +5293,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 36036a5 ( new updata)
+=======
+>>>>>>> 2f0ea50 (Add your commit)
 "nginx@^1.0.8":
   "integrity" "sha512-qd6erupgZjSnPX2Qa6uUYnNrdLyt6WyJAdP3olhaAITAveSHwUUzu9s0hnRbiYEQKf27LoSf1bpSqnljw9TyAg=="
   "resolved" "https://registry.npmjs.org/nginx/-/nginx-1.0.8.tgz"
@@ -5298,10 +5307,13 @@
     "commander" "^7.2.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f457f31 (first try)
 =======
 >>>>>>> 36036a5 ( new updata)
+=======
+>>>>>>> 2f0ea50 (Add your commit)
 "ngx-countup@^7.3.3":
   "integrity" "sha512-Vu+amEzO0ZrfXxWUFXl61qTDxFpKvxTwHg7Uw/psCIj2vhZzZEIBWliZ6m6FzBBHvvfJzb1xhK/6+Ab7RivuMg=="
   "resolved" "https://registry.npmjs.org/ngx-countup/-/ngx-countup-7.3.3.tgz"
