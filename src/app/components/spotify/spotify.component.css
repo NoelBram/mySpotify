@@ -1,0 +1,29 @@
+main{
+    position: relative;
+    margin-bottom: 10px;
+}
+.icon-button{
+    background: none;
+    padding-left: 20px;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+  }
+  .icon-button .icon {
+    width: 28px;
+  }
+
+  fa-icon {
+    padding-left: 6px;
+    display: inline-block;
+    line-height: 0px;
+    transition: 0.3s;
+    font-size: 50px;
+    padding-right: 7px;
+  }
+  
+  .spotify-item p {
+    color: #5f1919;
+    overflow: hidden;
+    white-space: nowrap;
+  }
