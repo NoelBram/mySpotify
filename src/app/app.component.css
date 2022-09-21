@@ -1,0 +1,26 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  opacity: 0;
+  transition:  .1s linear;
+}
+.show-scrollTop {
+  opacity: 1;
+  transition:  .1s linear;
+}
+
+.scroll-to-top i {
+  font-size: 50px;
+  color: #3487b7;
+  line-height: 0;
+}
+
+.back-to-top:hover {
+  background: #19465f;
+  color: #fff;
+}
+
+app-header{
+  text-align: center;
+}

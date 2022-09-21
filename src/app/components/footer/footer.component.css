@@ -1,0 +1,20 @@
+#footer {
+    padding: 20px;
+    position:relative;
+    bottom:0;
+    width:100%;
+    height:130px;   /* Height of the footer */
+    overflow: hidden;
+}
+fa-icon{
+    padding-left: 11px;
+    padding-right: 11px;
+}
+
+.social-links a:hover:enabled {
+    color: #19465f;
+  }
+
+.credits a:hover:enabled {
+    color: #19465f;
+  }

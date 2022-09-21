@@ -1,0 +1,102 @@
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+#header {
+  background: #ffd7d7;
+  box-shadow: 0px 0px 25px 0 rgba(0, 0, 0, 0.08);
+  z-index: 997;
+  padding: 7px 0;
+  justify-content:space-between;
+  line-height: 2.5;
+}
+
+#header .logo, .navButton {
+  font-size: 22px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-weight: 400;
+  font-family: 'Open Sans';
+  letter-spacing: 2px;
+  color: #b73434;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.dorpDownItems {
+  font-size: 17px;
+  margin: 0;
+  padding: 17px;
+  line-height: 2.5;
+  font-weight: 200;
+  font-family: 'Open Sans';
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #b73434;
+  text-align: center;
+  border-radius: 7px;
+  height:max-content;
+}
+.dorpDownItems .active{
+  margin: auto;
+  color: #ffd7d7;
+  background-color: #b73434;
+  border-radius: 7px;
+}
+
+#header .logo img {
+  max-height: 37px;
+  border: 3px solid #ffd7d7;
+  color: #c56060;
+  font-size: 17px;
+  border-radius: 7px;
+}
+
+@media (max-width: 992px) {
+  #header .logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 1.5px;
+    font-family: 'Open Sans';
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffd7d7;
+    white-space: nowrap;
+    transition: 0.3s;
+    position: relative;
+  }
+}
+
+@media (max-width: 992px) {
+  #header .logo a:hover {
+    color: #5f1919;
+  }
+}
+
+/*--------------------------------------------------------------
+# Header Social Links
+--------------------------------------------------------------*/
+
+.header-social-links {
+  padding-right: 15px;
+}
+
+fa-icon {
+  padding-left: 6px;
+  display: inline-block;
+  line-height: 0px;
+  transition: 0.3s;
+  font-size: 27px;
+  padding-right: 7px;
+}
+
+.header-social-links a:hover {
+  color: #19465f;
+}
+
+.navigation-items {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

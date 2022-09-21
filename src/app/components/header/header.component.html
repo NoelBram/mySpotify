@@ -1,0 +1,35 @@
+<header id="header" class="fixed-top">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="logo"><a href="https://noel-brambila.web.app/home" target="_blank"><img src="assets/img/pic.png" class="img-fluid" alt=""> Noel Brambila</a></h1>
+    </div>
+    <div fxHide fxShow.gt-sm class="pageLinks">
+      <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+        <li><a routerLinkActive="active" routerLink="/spotify">Spotify app</a></li>
+        <li><a routerLinkActive="active" routerLink="/other">[comming soon ...]</a></li>
+      </ul>
+    </div>
+    <div fxHide fxShow.gt-sm class="header-social-links align-items-center">
+      <a href="https://www.linkedin.com/in/noelbrambila/" target="_blank" class="linkedIn"><fa-icon [icon]="ln"></fa-icon></a>
+      <a href="https://github.com/NoelBram" target="_blank" class="github"><fa-icon [icon]="gh"></fa-icon></a>
+      <a href="https://www.instagram.com/noel_brambila_/" target="_blank" class="instagram"><fa-icon [icon]="ig"></fa-icon></a>
+      <a href="https://www.facebook.com/noel.brambila/" target="_blank" class="facebook"><fa-icon [icon]="fb"></fa-icon></a>
+      <a href="https://open.spotify.com/user/22io3oxgaphrgsxto4naqh4ai?si=09ea5e12617f4a39" target="_blank" class="spotify"><fa-icon [icon]="sy"></fa-icon></a>
+      </div>
+    <div fxHide.gt-sm class="navButton flex-row-reverse">
+      <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+        <button class="btn nav-link dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>            
+          <fa-icon [icon]="mu"></fa-icon>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dorpDownItems">
+          <li><a routerLinkActive="active" routerLink="/spotify">Spotify APP</a></li>
+          <li><a routerLinkActive="active" routerLink="/other">[comming soon ...]</a></li>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- =======================================================
+  Author: Noel Brambila
+  License: https://www.instagram.com/noel_brambila_/
+  ======================================================== -->
