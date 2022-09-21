@@ -8,7 +8,8 @@
     "build": "ng build",
     "prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "comp": "docker-compose up --build"
   },
   "private": true,
   "dependencies": {
