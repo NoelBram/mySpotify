@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContactFormComponent } from './auth-form.component';
+import { SpotifyFormComponent } from './spotify-form.component';
 
-describe('ContactFormComponent', () => {
-  let component: ContactFormComponent;
-  let fixture: ComponentFixture<ContactFormComponent>;
+describe('SpotifyFormComponent', () => {
+  let component: SpotifyFormComponent;
+  let fixture: ComponentFixture<SpotifyFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContactFormComponent ]
+      declarations: [ SpotifyFormComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContactFormComponent);
+    fixture = TestBed.createComponent(SpotifyFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

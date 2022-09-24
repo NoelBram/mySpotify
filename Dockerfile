@@ -1,11 +1,14 @@
-FROM node:alpine as BUILD
-WORKDIR '/app'
-COPY package.json .
+# Stage 0: compile angular frontend
+FROM node:latest as build
+WORKDIR /app
+COPY . .
 RUN npm install
-COPY . . 
-RUN npm run build
+RUN npm run prod
 
 
-FROM nginx 
+#stage 2
+# Stage 1: serve app with nginx server
+FROM nginx:latest
+COPY --from=build /app/docs  /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 4200
-COPY --from=BUILD /app/docs /usr/share/nginx/html

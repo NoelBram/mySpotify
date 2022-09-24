@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
 @Component({
-	selector: 'app-contact-form',
-	templateUrl: './contact-form.component.html',
-	styleUrls: ['./contact-form.component.scss']
+	selector: 'app-spotify-form',
+	templateUrl: './spotify-form.component.html',
+	styleUrls: ['./spotify-form.component.scss']
 })
-export class ContactFormComponent implements OnInit {
+export class SpotifyFormComponent implements OnInit {
 
 	form: FormGroup;
 	name: FormControl = new FormControl("", [Validators.required]);

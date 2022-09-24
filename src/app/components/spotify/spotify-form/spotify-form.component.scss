@@ -8,19 +8,19 @@
 	text-align: center
 }
 .form-control{
-	background-color: #ecf7ff;
+	background-color: #ffecec;
 	margin: 2px 2px 2px 2px;
 }
 #info .bi{
-    background-color: #ecf7ff;
+    background-color: #ffecec;
 }
 ::ng-deep .mat-form-field {
-    border-color: #19465f;
+    border-color: #5f1919;
     border-width: thin;
     .mat-input-element {
-        color: #3487b7;
+        color: #b73434;
         height: 44px;
-        border-color: #3487b7;
+        border-color: #b73434;
         box-shadow: none;
         font-size: 17px;
         padding: 10px 12px;
@@ -31,7 +31,7 @@
     }
     .mat-form-field-label {
         padding: 30px;
-        color: #3487b7;
+        color: #b73434;
         height: 100px;
         box-shadow: none;
         font-size: 13px;
@@ -41,27 +41,27 @@
         letter-spacing: 1.5px;
     }
     .mat-form-field-underline {
-        background-color: #3487b7;
+        background-color: #b73434;
     }
     .mat-form-field-ripple {
-        background-color: #3487b7;
+        background-color: #b73434;
     }
     .mat-form-field-required-marker {
-        color: #3487b7;
+        color: #b73434;
     }
 }
 ::ng-deep .mat-form-field.mat-focused {
     .mat-form-field-label {
-        color: #19465f;
+        color: #5f1919;
     }
     .mat-form-field-ripple {
-        background-color: #19465f;
+        background-color: #5f1919;
     }
     .mat-form-field-required-marker {
-        color: #19465f;
+        color: #5f1919;
     }
     .mat-input-element {
-        color: #19465f;
+        color: #5f1919;
     }
 }
 ::ng-deep .mat-form-field.mat-form-field-invalid {

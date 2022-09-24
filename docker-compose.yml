@@ -1,9 +1,30 @@
-version: '3.8'
+version: '3.7'
+
 services:
-  myapp:
-    build: .
-    ports:
-      - "8080:4200"
-    volumes:
-      - "/app/node_module2s"
-      - ".:/app"
+        frontend:
+                container_name: spotify-mix-tape-frontend
+                depends_on:
+                        - database 
+                        - backend
+                image: spotify-mix-tape-frontend
+                build:
+                        context: ./frontend
+                        dockerfile: frontend.dockerfile
+                ports:
+                        - "8080:4200"
+        database:
+                container_name: mongo
+                image: mongo
+                ports:
+                        - "27017:27017"
+
+        backend:
+                container_name: spotify-mix-tape-api
+                image: spotify-mix-tape-api
+                build:
+                        context: ./backend
+                        dockerfile: backend.dockerfile
+                environment:
+                        - NODE_ENV=production
+                ports:
+                        - "3000:3000"

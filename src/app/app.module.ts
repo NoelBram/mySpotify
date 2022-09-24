@@ -10,7 +10,6 @@ import { SwiperModule } from 'swiper/angular';
 import { GalleryModule } from '@ngx-gallery/core';
 import { LightboxModule } from 'ngx-lightbox';
 import { NgxTypedJsModule } from 'ngx-typed-js';
-import { AngularFireStorageModule, BUCKET } from '@angular/fire/compat/storage';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,9 +19,6 @@ import { MatListModule } from '@angular/material/list';
 import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { environment } from '../environments/environment.prod';
@@ -35,8 +31,10 @@ import { FourOFourComponent } from './components/four-o-four/four-o-four.compone
 import { HeaderComponent } from './components/header/header.component';
 
 import { SpotifyComponent } from './components/spotify/spotify.component';
+import { SpotifyHeaderComponent } from './components/spotify/spotify-header/spotify-header.component';
+import { SpotifyFormComponent } from './components/spotify/spotify-form/spotify-form.component';
 
-import { OtherComponent } from './components/other/other.component';
+import { AboutComponent } from './components/about/about.component';
 
 import { AppComponent } from './app.component';
 
@@ -48,7 +46,9 @@ import { AppComponent } from './app.component';
     FourOFourComponent,
     HeaderComponent,
     SpotifyComponent,
-    OtherComponent,
+    SpotifyFormComponent,
+    SpotifyHeaderComponent,
+    AboutComponent,
   ],
   exports: [
     MatButtonModule,
@@ -59,10 +59,6 @@ import { AppComponent } from './app.component';
     MatToolbarModule
   ],
   imports: [
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAnalyticsModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
     AppRoutingModule,
     BrowserModule,
     FlexLayoutModule,
@@ -88,7 +84,6 @@ import { AppComponent } from './app.component';
     NgxTypedJsModule,
     BrowserAnimationsModule
   ],
-  providers: [{ provide: BUCKET, useValue: environment.firebase.storageBucket }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

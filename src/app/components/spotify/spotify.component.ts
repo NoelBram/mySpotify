@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { faGithub, faAws } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-spotify',
@@ -7,8 +6,6 @@ import { faGithub, faAws } from '@fortawesome/free-brands-svg-icons';
   styleUrls: ['./spotify.component.css']
 })
 export class SpotifyComponent implements OnInit {
-  gh = faGithub;
-  aws = faAws;
 
   constructor() { 
   }

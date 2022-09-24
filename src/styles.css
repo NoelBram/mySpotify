@@ -425,9 +425,9 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Spotify
+# About
 --------------------------------------------------------------*/
-.spotify .spotify-title {
+.about .about-title {
   font-size: 26px;
   font-weight: 400;
   margin-top: 20px;
@@ -435,14 +435,14 @@ section {
   color: #222222;
 }
 
-.spotify .spotify-item {
+.about .about-item {
   padding: 0 0 20px 20px;
   margin-top: -2px;
   border-left: 2px solid #b73434;
   position: relative;
 }
 
-.spotify .spotify-item h4 {
+.about .about-item h4 {
   line-height: 18px;
   font-size: 18px;
   font-weight: 600;
@@ -452,7 +452,7 @@ section {
   margin-bottom: 10px;
 }
 
-.spotify .spotify-item h5 {
+.about .about-item h5 {
   font-size: 16px;
   background: #fbe7e7;
   padding: 5px 15px;
@@ -462,23 +462,23 @@ section {
   color: #b73434;
 }
 
-.spotify .spotify-item ul {
+.about .about-item ul {
   padding-left: 20px;
 }
 
-.spotify .spotify-item ul li {
+.about .about-item ul li {
   padding-bottom: 10px;
 }
 
-.spotify .spotify-item:last-child {
+.about .about-item:last-child {
   padding-bottom: 0;
 }
 
-.spotify .col .spotify-item .card{
+.about .col .about-item .card{
   border-radius: 33px;
 }
 
-.spotify .col .spotify-item::before {
+.about .col .about-item::before {
   content: "";
   position: absolute;
   width: 16px;
@@ -490,7 +490,7 @@ section {
   border: 2px solid #b73434;
 }
 
-.spotify .btn-app {
+.about .btn-app {
   letter-spacing: 1.5px;
   font-weight: 300;
   font-family: 'Open Sans';
@@ -507,9 +507,95 @@ section {
   background-color: #b73434;
 }
 
-.spotify .btn-app:hover {
+.about .btn-app:hover {
   background-color: #5f1919;
 }
+
+
+/*--------------------------------------------------------------
+# Sportify
+--------------------------------------------------------------*/
+.spotify .info {
+  width: 100%;
+  background: none;
+} 
+
+.spotify .info i {
+  font-size: 20px;
+  color: #b73434;
+  float: left;
+  width: 44px;
+  height: 44px;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}
+
+#spotify .info h4 {
+  padding: 0 0 0 60px;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #222222;
+}
+
+#spotify .info p {
+  padding: 0 0 0 60px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #555555;
+}
+
+#spotify .info .email, .spotify .info .phone {
+  margin-top: 40px;
+}
+
+#spotify .info .email:hover i, .spotify .info .address:hover i, .spotify .info .phone:hover i {
+  background: #5f1919;
+  color: #fdfdfd;
+}
+
+#spotify .btn-submit {
+  letter-spacing: 1.5px;
+  font-weight: 100;
+  font-family: 'Open Sans';
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 12px 40px;
+  border-radius: 7px;
+  transition: 0.5s;
+  margin-top: 30px;
+  color: #fdfdfd;
+  background: #b73434;
+}
+
+#spotify .btn-submit:hover {
+  background: #5f1919;
+}
+
+@-webkit-keyframes animate-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animate-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 /*--------------------------------------------------------------
 # Footer
