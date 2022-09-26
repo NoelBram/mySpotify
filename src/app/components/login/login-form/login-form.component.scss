@@ -14,9 +14,16 @@
 #info .bi{
     background-color: #ffecec;
 }
+.spotify .logo-sy{
+    font-size: 27px;
+    position: relative;
+    left: 1px;
+}
+
 ::ng-deep .mat-form-field {
     border-color: #5f1919;
     border-width: thin;
+    width: 70%;
     .mat-input-element {
         color: #b73434;
         height: 44px;

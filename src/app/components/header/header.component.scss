@@ -46,7 +46,6 @@
 
 #header .logo img {
   max-height: 37px;
-  border: 3px solid #ffd7d7;
   color: #c56060;
   font-size: 17px;
   border-radius: 7px;
@@ -72,6 +71,11 @@
   #header .logo a:hover {
     color: #5f1919;
   }
+}
+.pageLinks {
+  position: sticky;
+  margin-right: 37%;
+  
 }
 
 /*--------------------------------------------------------------

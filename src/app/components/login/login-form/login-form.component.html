@@ -1,0 +1,49 @@
+<section id="login" class="login">
+  <div class="row mt-5">
+      <div class="col-lg-12 mt-5 mt-lg-0" data-aos="zoom-in-down" data-aos-duration="2500" data-aos-mirror="false" data-aos-once="false">
+        <div class="row">
+          <div class="text-center">
+            <button [disabled]="isLoading" class="btn-login-login" type="submit" (click)='authSpotify()'>
+              <h6><fa-icon [icon]="sy" class="logo-sy"></fa-icon> Login with Spotify</h6>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-center">
+            <br>
+            <p> ------- OR ------- </p>
+          </div>
+        </div>
+        <form class="login" [formGroup]="form" method="post" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="text-center">
+              <mat-form-field>
+                <div class="col-10 col-sm-10 col-md-10 col-lg-10 form-group">
+                  <input matInput class="form-control"  [formControl]="email"  required placeholder="Email">
+                </div>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="text-center">
+              <mat-form-field>
+                <div class="col-10 col-sm-10 col-md-10 col-lg-10 form-group">
+                  <input matInput class="form-control"  [formControl]="password" required placeholder="Password">
+                </div>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="text-center">
+              <button [disabled]="isLoading" class="btn-submit" type="submit">Login</button>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div [ngClass]="!submitted? 'hidden' : 'visible'" (click)="onSubmit()" class="center-text">
+            <span>{{responseMessage}}</span>
+          </div>
+        </form>
+      </div>
+  </div>
+</section>

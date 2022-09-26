@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #main {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 @media (max-width: 992px) {
@@ -371,7 +371,7 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  padding: 40px 0;
 }
 
 .section-bg {
@@ -404,24 +404,6 @@ section {
 
 .section-title p {
   margin-bottom: 0;
-}
-
-/*--------------------------------------------------------------
-# Facts
---------------------------------------------------------------*/
-.facts .counters span {
-  font-size: 48px;
-  display: block;
-  color: #b73434;
-}
-
-.facts .counters p {
-  padding: 0;
-  margin: 0 0 20px 0;
-  letter-spacing: 1.5px;
-  font-weight: 100;
-  font-family: 'Open Sans';
-  font-size: 14px;
 }
 
 /*--------------------------------------------------------------
@@ -513,52 +495,45 @@ section {
 
 
 /*--------------------------------------------------------------
-# Sportify
+# Hero Section
 --------------------------------------------------------------*/
-.spotify .info {
+#hero {
   width: 100%;
-  background: none;
-} 
-
-.spotify .info i {
-  font-size: 20px;
-  color: #b73434;
-  float: left;
-  width: 44px;
-  height: 44px;
-  background: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px;
-  transition: all 0.3s ease-in-out;
+  height: 100vh;
+  background: url("assets/img/spotify.jpg") top right;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top right 17%;
+  margin-bottom: auto;
 }
 
-#spotify .info h4 {
-  padding: 0 0 0 60px;
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: #222222;
+#hero .container {
+  padding-top: 70px;
+  position: relative;
 }
 
-#spotify .info p {
-  padding: 0 0 0 60px;
-  margin-bottom: 0;
-  font-size: 14px;
-  color: #555555;
+@media (max-width: 992px) {
+  #hero .container {
+    padding-top: 58px;
+  }
 }
 
-#spotify .info .email, .spotify .info .phone {
-  margin-top: 40px;
-}
-
-#spotify .info .email:hover i, .spotify .info .address:hover i, .spotify .info .phone:hover i {
-  background: #5f1919;
+#hero h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 56px;
   color: #fdfdfd;
 }
 
-#spotify .btn-submit {
+#hero h2 {
+  color: #751b1b;
+  margin: 10px 0 0 0;
+  font-size: 22px;
+  font-weight: 100;
+}
+
+#hero .btn-about {
   letter-spacing: 1.5px;
   font-weight: 100;
   font-family: 'Open Sans';
@@ -574,8 +549,76 @@ section {
   background: #b73434;
 }
 
-#spotify .btn-submit:hover {
+#hero .btn-about:hover {
   background: #5f1919;
+}
+
+@media (min-width: 1024px) {
+  #hero {
+    background-attachment: fixed;
+  }
+}
+
+@media (max-width: 992px) {
+  #hero:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  #hero h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  #hero h2 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Login
+--------------------------------------------------------------*/
+#login .btn-submit {
+  letter-spacing: 1.5px;
+  font-weight: 100;
+  font-family: 'Open Sans';
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 7px;
+  transition: 0.5s;
+  margin-top: 30px;
+  color: #fdfdfd;
+  background: #b73434;
+}
+
+#login .btn-submit:hover {
+  background: #5f1919;
+}
+
+#login .btn-login-login{
+  letter-spacing: 1.5px;
+  font-weight: 100;
+  font-family: 'Open Sans';
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 7px;
+  transition: 0.5s;
+  margin-top: 30px;
+  color: #fdfdfd;
+  background: #5f1919;
+}
+
+#login .btn-submit:hover {
+  background: #330d0d;
 }
 
 @-webkit-keyframes animate-loading {

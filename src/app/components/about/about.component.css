@@ -4,6 +4,9 @@ main{
     margin-bottom: 300px;
     background-color: #fffbfb;
   }
+  .about h2{
+    margin-top: 60px;
+  }
   .icon-button{
     background: none;
     padding-left: 20px;

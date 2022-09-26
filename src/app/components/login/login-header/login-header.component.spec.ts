@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SpotifyHeaderComponent } from './spotify-header.component';
+import { LoginHeaderComponent } from './login-header.component';
 
-describe('SpotifyHeaderComponent', () => {
-  let component: SpotifyHeaderComponent;
-  let fixture: ComponentFixture<SpotifyHeaderComponent>;
+describe('LoginHeaderComponent', () => {
+  let component: LoginHeaderComponent;
+  let fixture: ComponentFixture<LoginHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SpotifyHeaderComponent ]
+      declarations: [ LoginHeaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SpotifyHeaderComponent);
+    fixture = TestBed.createComponent(LoginHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

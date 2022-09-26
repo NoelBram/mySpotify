@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CountUpModule } from 'ngx-countup';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -23,32 +23,52 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { environment } from '../environments/environment.prod';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { FooterComponent } from './components/footer/footer.component';
-
-import { FourOFourComponent } from './components/four-o-four/four-o-four.component';
-
-import { HeaderComponent } from './components/header/header.component';
-
-import { SpotifyComponent } from './components/spotify/spotify.component';
-import { SpotifyHeaderComponent } from './components/spotify/spotify-header/spotify-header.component';
-import { SpotifyFormComponent } from './components/spotify/spotify-form/spotify-form.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { AboutComponent } from './components/about/about.component';
 
 import { AppComponent } from './app.component';
 
+import { FooterComponent } from './components/footer/footer.component';
+
+import { FourOFourComponent } from './components/four-o-four/four-o-four.component';
+
+import { GlobalService } from './services/global.service';
+
+import { HeaderComponent } from './components/header/header.component';
+
+import { HomeComponent } from './components/home/home.component';
+
+import { LoginComponent } from './components/login/login.component';
+import { LoginHeaderComponent } from './components/login/login-header/login-header.component';
+import { LoginFormComponent } from './components/login/login-form/login-form.component';
+
+import { MixMateComponent } from './components/mix-mate/mix-mate.component';
+
+import { MixTapeComponent } from './components/mix-tape/mix-tape.component';
+
+import { SpotifyAuthService } from './services/spotify.auth';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+}
+
 
 @NgModule({
   declarations: [
+    AboutComponent,
     AppComponent,
     FooterComponent,
     FourOFourComponent,
     HeaderComponent,
-    SpotifyComponent,
-    SpotifyFormComponent,
-    SpotifyHeaderComponent,
-    AboutComponent,
+    HomeComponent,
+    LoginComponent,
+    LoginFormComponent,
+    LoginHeaderComponent,
+    MixMateComponent,
+    MixTapeComponent,
   ],
   exports: [
     MatButtonModule,
@@ -60,7 +80,9 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     AppRoutingModule,
+    BrowserAnimationsModule,
     BrowserModule,
+    CountUpModule,
     FlexLayoutModule,
     FlexModule,
     FontAwesomeModule,
@@ -78,14 +100,22 @@ import { AppComponent } from './app.component';
     MatTabsModule,
     MatToolbarModule,
     NgbModule,
+    NgxTypedJsModule,
     ReactiveFormsModule,
     SwiperModule,
-    CountUpModule,
-    NgxTypedJsModule,
-    BrowserAnimationsModule
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient],
+      }
+    }),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [GlobalService, SpotifyAuthService]
+
 })
+
 export class AppModule { }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
