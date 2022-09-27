@@ -1,8 +1,9 @@
+import {APP_BASE_HREF} from "@angular/common";
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CountUpModule } from 'ngx-countup';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -21,11 +22,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
-import { environment } from '../environments/environment.prod';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+import { environment } from '../environments/environment.prod';
+import { SpotifyAuthService } from './services/spotify.auth';
+import { AuthInterceptor } from './services/auth-interceptor';
+import { LoadingComponent } from "./common/loading/loading.component";
+import { routes } from "./app-routing.module"
 
 import { AboutComponent } from './components/about/about.component';
 
@@ -49,8 +56,6 @@ import { MixMateComponent } from './components/mix-mate/mix-mate.component';
 
 import { MixTapeComponent } from './components/mix-tape/mix-tape.component';
 
-import { SpotifyAuthService } from './services/spotify.auth';
-
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
@@ -64,6 +69,7 @@ export function createTranslateLoader(http: HttpClient) {
     FourOFourComponent,
     HeaderComponent,
     HomeComponent,
+    LoadingComponent,
     LoginComponent,
     LoginFormComponent,
     LoginHeaderComponent,
@@ -102,17 +108,23 @@ export function createTranslateLoader(http: HttpClient) {
     NgbModule,
     NgxTypedJsModule,
     ReactiveFormsModule,
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
     SwiperModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient],
-      }
-    }),
+    // TranslateModule.forRoot({
+    //   loader: {
+    //     provide: TranslateLoader,
+    //     useFactory: (createTranslateLoader),
+    //     deps: [HttpClient],
+    //   }
+    // }),
   ],
   bootstrap: [AppComponent],
-  providers: [GlobalService, SpotifyAuthService]
+  providers: [SpotifyAuthService,{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  },
+  {provide: APP_BASE_HREF, useValue : '/' }]
 
 })
 

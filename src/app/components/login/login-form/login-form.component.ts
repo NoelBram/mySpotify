@@ -4,7 +4,6 @@ import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { SpotifyAuthService } from '../../../services/spotify.auth'
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProviderService } from 'src/app/providers/provider-service';
 import { LocalstorageService } from 'src/common/local-storage.service';
 @Component({
 	selector: 'app-login-form',
@@ -20,11 +19,10 @@ export class LoginFormComponent implements OnInit {
 	submitted: boolean = false; // show and hide the success message
 	isLoading: boolean = false; // disable the submit button if we're loading
 	responseMessage: any; // the response message to show to the user
-	CLIENT_ID: string = '7ece4bb7979f433ab4a0a604bc2f97b5';
-	REDIRECT_URI: string = '/callback'
+
 	constructor(private route: ActivatedRoute,
 		private router: Router,
-		private democraylistService: ProviderService,
+		private authService: SpotifyAuthService,
 		private localstorageService: LocalstorageService,
 		private formBuilder: FormBuilder, 
 		private http: HttpClient) {
@@ -70,8 +68,8 @@ export class LoginFormComponent implements OnInit {
 	authSpotify() {
 		this.isLoading = true;
 		localStorage.removeItem('access_token');
-		this.democraylistService.getSpotifyAuthUrl().subscribe(response => {
-      		window.open(response.url, '_self');
-    	});
+		this.authService.auth().subscribe(response => {
+			window.open(response.url, '_self');
+		});
 	}
 }

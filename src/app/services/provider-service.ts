@@ -16,9 +16,6 @@ export class ProviderService {
       });
     });
   }
-
-  // USER
-
   getSpotifyAuthUrl(): Observable<any> {
     return this.http.get('auth/spotify_login_url');
   }

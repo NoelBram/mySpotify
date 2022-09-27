@@ -15,7 +15,7 @@ export class SpotifyAuthService {
       '?response_type=code' +
       '&client_id=' + '7ece4bb7979f433ab4a0a604bc2f97b5' +
       '&scope=' + encodeURIComponent('user-read-email playlist-read-private playlist-read-collaborative user-library-read user-library-modify') +
-      '&redirect_uri=' + encodeURIComponent('http://localhost:4200/callback')
+      '&redirect_uri=' + encodeURIComponent('http://localhost:4200/home')
     );
   }
 }
