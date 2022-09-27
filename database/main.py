@@ -12,7 +12,7 @@ from keyvalue_sqlite import KeyValueSqlite
 
 DATABASE_LOCATION = "sqlite:///my_played_tracks.sqlite"
 USER_ID = "Noah Bram" # your Spotify username 
-TOKEN = "BQAFKMIcdJQj7P4C8YTtO87f7N6Z27cZhhpt8ugLyr3sgjMTqoew6-6fwvFRpUEsmX_sfDivZPhkm6BrDCGMta1_YCEw7jN4eV84O1gHIRE-NNU4DJgc6MuBdVSjxyV8QmrAUi4fzJpW1Fq2p-j8AW9mkUOZbMxcVUbK9ZojBTN1tdLx12W6noY40BB_cym3Qfm2wTcE" # your Spotify API token
+TOKEN = "BQC9jzKER_m8oJlL9NzGekc7yJQKvDn38TwYpBdITgi94-_lRsQrXoqWbNIFT9gZ1BXSg-b9J3z0seLGuYPQSzQiofy0VT7L72rhyyH58wNn6vNpH1pXuJChDCgGTjor8KKsWK-SOSDCgpssptSCMivoJIhGiCSWAyJZjALSkq0J7xVAEkdNjkrdjLx1ywxZf9b3i97J" # your Spotify API token
 
 # Generate your token here:  https://developer.spotify.com/console/get-recently-played/
 # Note: You need a Spotify account (can be easily created for free)
