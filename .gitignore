@@ -8,3 +8,4 @@ docs
 !.elasticbeanstalk/*.global.yml
 
 database/airflow-venu
+database/my_played_tracks.sqlite
