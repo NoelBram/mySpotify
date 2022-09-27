@@ -8,6 +8,7 @@ import {
 import {Observable, of, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {catchError} from 'rxjs/operators';
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) { }

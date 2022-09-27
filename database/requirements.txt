@@ -1,9 +1,4 @@
 Datetime==4.7
-Flask-SQLAlchemy==2.5.1
-Flask==0.12.2
-keyvalue_sqlite==1.0.5
 requests==2.18.4
 requests-oauthlib==1.3.0
-SQLAlchemy==1.4.41
-sqlalchemy-orm==1.2.3
 pandas==1.2.4

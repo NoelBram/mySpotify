@@ -2,8 +2,8 @@
   <div class="row mt-5">
       <div class="col-lg-12 mt-5 mt-lg-0" data-aos="zoom-in-down" data-aos-duration="2500" data-aos-mirror="false" data-aos-once="false">
         <div class="row">
-          <div class="text-center">
-            <button [disabled]="isLoading" class="btn-login-login" type="submit" (click)='authSpotify()'>
+          <div *ngIf="!isLoading" id="login-button-container" class="text-center">
+            <button type="button" class="p-button-success btn-login-login" (click)='authSpotify()'>
               <h6><fa-icon [icon]="sy" class="logo-sy"></fa-icon> Login with Spotify</h6>
             </button>
           </div>

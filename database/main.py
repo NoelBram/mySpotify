@@ -1,18 +1,18 @@
 from contextlib import nullcontext
 import sqlite3
-from flask import Flask
-import sqlalchemy
+# from flask import Flask
+# import sqlalchemy
 import pandas as pd 
-from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.orm import sessionmaker
 import requests
-import json
+# import json
 from datetime import datetime
 import datetime
-from keyvalue_sqlite import KeyValueSqlite
+# from keyvalue_sqlite import KeyValueSqlite
 
 DATABASE_LOCATION = "sqlite:///my_played_tracks.sqlite"
 USER_ID = "Noah Bram" # your Spotify username 
-TOKEN = "BQC9jzKER_m8oJlL9NzGekc7yJQKvDn38TwYpBdITgi94-_lRsQrXoqWbNIFT9gZ1BXSg-b9J3z0seLGuYPQSzQiofy0VT7L72rhyyH58wNn6vNpH1pXuJChDCgGTjor8KKsWK-SOSDCgpssptSCMivoJIhGiCSWAyJZjALSkq0J7xVAEkdNjkrdjLx1ywxZf9b3i97J" # your Spotify API token
+TOKEN = "BQANn_Uo8Ge5pHHXYsyWq4r1jJEXzE6sPzJ_bMzpQTKMWOx10OzPTKVuPQ7vFu4lkn40C3XPeUl7LZz9IHBkjeXNx0_ywlSqRNxKa8HZ6hFbKfn_lRxyB7AZzI_-nkQJeBBoAn_7bAvl1QF4G9Cth4fM2v18lp6_tk7OHxLoQM8gNxK21_WytPn8xll-e0FlZtFTJORT" # your Spotify API token
 
 # Generate your token here:  https://developer.spotify.com/console/get-recently-played/
 # Note: You need a Spotify account (can be easily created for free)
@@ -125,8 +125,5 @@ if __name__ == "__main__":
     print("Close database successfully")
     # print(df.head)
     
-
-
     # Job scheduling 
     
-    # For the scheduling in Airflow, refer to files in the dag folder 

@@ -1,10 +1,11 @@
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { HttpClient } from '@angular/common/http';
-import { SpotifyAuthService } from '../../../services/spotify.auth'
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalstorageService } from 'src/common/local-storage.service';
+import { ProviderService } from 'src/app/services/provider.service';
+
 @Component({
 	selector: 'app-login-form',
 	templateUrl: './login-form.component.html',
@@ -20,9 +21,12 @@ export class LoginFormComponent implements OnInit {
 	isLoading: boolean = false; // disable the submit button if we're loading
 	responseMessage: any; // the response message to show to the user
 
+	user:any;
+	playlists: any = [];
+  
 	constructor(private route: ActivatedRoute,
 		private router: Router,
-		private authService: SpotifyAuthService,
+		private providerService: ProviderService,
 		private localstorageService: LocalstorageService,
 		private formBuilder: FormBuilder, 
 		private http: HttpClient) {
@@ -32,7 +36,31 @@ export class LoginFormComponent implements OnInit {
 			name: this.password,
 		});
 	}
-	ngOnInit(): void {} 
+	ngOnInit(): void {
+		if (!localStorage.getItem('access_token')) {
+			this.route.queryParams.subscribe(params => {
+			  const code = params.code;
+			  if (code) {
+				this.providerService.getSpotifyToken(code).subscribe(response => {
+				  this.user = response.user;
+				  this.localstorageService.setItem('access_token', response.access_token);
+				  this.localstorageService.setItem('user', JSON.stringify(response.user));
+				  const redirectUrl = sessionStorage.getItem('redirectUrl');
+				  if (redirectUrl) {
+					sessionStorage.removeItem('redirectUrl');
+					this.router.navigateByUrl(redirectUrl);
+				  } else {
+					this.router.navigate(['/']);
+				  }
+				});
+			  } else {
+				this.isLoading = false;
+			  }
+			});
+		  } else {
+			this.authSpotify();
+		  }
+	} 
 	onSubmit() {
 		if (this.form.status == "VALID") {
 			//this.form.disable(); // disable the form if it's valid to disable multiple submissions
@@ -68,7 +96,7 @@ export class LoginFormComponent implements OnInit {
 	authSpotify() {
 		this.isLoading = true;
 		localStorage.removeItem('access_token');
-		this.authService.auth().subscribe(response => {
+		this.providerService.getSpotifyAuthUrl().subscribe(response => {
 			window.open(response.url, '_self');
 		});
 	}

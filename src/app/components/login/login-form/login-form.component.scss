@@ -20,6 +20,18 @@
     left: 1px;
 }
 
+
+#login-button-container {
+    height: 10em;
+  }
+  
+  .btn-login-login{
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+
 ::ng-deep .mat-form-field {
     border-color: #5f1919;
     border-width: thin;
