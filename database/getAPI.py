@@ -17,7 +17,6 @@ def getAccessToken(clientID, clientSecret):
 
     # print(base64_message) 
     # curl -X "POST" -H "Autorization: Basic Zj....Y0NDQ=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
-    # 반드시 Basic 뒤에 한칸 뛰어야 합니다.
 
     authHeader['Authorization'] = "Basic " + base64_message
     authData['grant_type'] = "client_credentials"
@@ -67,13 +66,16 @@ Link  : https://developer.spotify.com/documentation/web-api/reference/#/operatio
 
 # -------------------------------------
 
-user_id = "annieboyse"
+user_id = ""
 
 def getUserPlaylist(token, user_id): 
     endpoint = f"https://api.spotify.com/v1/users/{user_id}/playlists"
     getHeader = {
-      "Authorization" : "Bearer " + token
-       }
+        "Accept" : "application/json",
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=token)
+    }
+       
     
     res_users = requests.get(endpoint, headers=getHeader)
     users_plists = res_users.json()
@@ -100,11 +102,11 @@ with open(f'./json_data/MBTI_plist1.json','w') as f:
 
 
 def getPlaylistTracks(token, playlist_id):
-
     endpoint = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-
     getHeader = {
-        "Authorization" : "Bearer " + token
+        "Accept" : "application/json",
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=token)
     }
 
     res = requests.get(endpoint, headers=getHeader)
@@ -117,8 +119,8 @@ pli_track = {}
 track_dic = {}
 
 for i in range(0, len(list(plist_dicts.values()))):
-    tracks = getPlaylistTracks(token, list(plist_dicts.values())[i]) # 위 함수를 이용하여 `tracks`에 저장한다.
-    for j in range(0, len(tracks['items'])): # MBTI 별 트랙에서 `{순서 : track_id}` 순으로 json 피클링을 한다.
+    tracks = getPlaylistTracks(token, list(plist_dicts.values())[i])
+    for j in range(0, len(tracks['items'])):
         track_dic[f'{j}'] = tracks['items'][j]['track']['id']
     # with open(f'./json_data/mbti_track/{list(plist_dicts.keys())[i].split()[0]}.json','w') as f:
     #     json.dump(track_dic, f)
@@ -128,16 +130,12 @@ for i in range(0, len(list(plist_dicts.values()))):
 # with open(f'./json_data/mbti_track/mbti_tracks.json','w') as f:
 #    json.dump(pli_track, f)
 
-
 def gettrackAudioFeatures(token, ids):
-    """
-    ## 트랙에 대한 정보 가져오기
-
-    """
     endpoint = "https://api.spotify.com/v1/audio-features?ids={ids}"
-    
     getHeader = {
-        "Authorization" : "Bearer " + token
+        "Accept" : "application/json",
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=token)
     }
 
     res = requests.get(endpoint, headers=getHeader)

@@ -142,9 +142,10 @@ if __name__ == "__main__":
     # # Job scheduling 
 def gettrackAudioFeatures(token, ids):
     endpoint = "https://api.spotify.com/v1/audio-features?ids={ids}"
-    
     getHeader = {
-        "Authorization" : "Bearer " + token
+        "Accept" : "application/json",
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=token)
     }
 
     res = requests.get(endpoint, headers=getHeader)
