@@ -1,19 +1,5 @@
-FROM python:3.11-rc-slim as build
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-build-essential gcc 
-
-WORKDIR /usr/app
-RUN python -m venv /usr/app/venv
-ENV PATH="/usr/app/venv/bin:$PATH"
-
+FROM python:3.9-slim@sha256:f0687882d40d9813c46268585403aee057a7ffe7a4a7a27b5df243201a4b01fc
+COPY . /app
+WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-FROM python:3.11-rc-slim@sha256:91a895e0c71f1cde563e612d38ec28c058291a3bd1080381ec44164098b27ddd
-WORKDIR /usr/app/venv
-COPY --from=build /usr/app/venv ./venv
-COPY . .
-
-ENV PATH="/usr/app/venv/bin:$PATH"
-CMD [ "python3.11", "main.py" ]
