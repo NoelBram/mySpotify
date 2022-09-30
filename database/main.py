@@ -14,7 +14,9 @@ import datetime
 
 DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
-TOKEN = "BQDrkxB3B3Vvx_As1e4pTEmcmSJPQQCwJqnB1yUVnc3xjOswZs1JNtI2Yfhautf6TbonP08_g2iicV35GGBMuqqVm5sSGSE0-1ZYRj5-yN5zryIyfFeymxxZOeh31Y7Y6SD82JFE5WJQy8xkejN8Do6rAGGpTTyRwJkQiqXifBWj27AE5JeZRSJydmKOcXZ2UNorXXq9rupT0R76sFM" # your Spotify API token
+TOKEN = "BQAp2QHWJBYsnJLRgWyfY5VIDqWlKeQN2TQYC9kV_tdqPk1rOjB6DD6aHSZ2YrB5S-ozYQORyXqQcu9I8tY5A042nkNuw3Pkfn3OVDWz6KrSacPYehcpfRoX-y5AfK3CzQbpS54VG6I2AFuWCwtOwSKG6_pN8BLHHrjsoOkkW9uwYefxUOn-Rve2tPnlrL2iVYKEBfa4461naTD_fQ0" # your Spotify API token
+
+playlistToken = "BQB04wwbyexluap3DSuDO2mRCxoi1bpVr2hiSw3_0fyy360_P2d6Ukp0cFDj3sT6eY44jfpqSCrwCBX0cgGAAAWrPWPps8uo1tnVWG-LmfgC8iVZgVW-1S8antfNoTN32ZWlW3Lad0UluGNMD_vW78D6sJJT2gkM7e3tDr7mWfRM4Smo-SHqRX9GqDQTrVIp9r0"
 
 # Generate your token here:  https://developer.spotify.com/console/get-recently-played/
 # Note: You need a Spotify account (can be easily created for free)
@@ -47,6 +49,20 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
 
     return True
 
+
+def getPlaylist(token, id):
+    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}".format(playlist_id = id)
+    headers = {
+        "Accept" : "application/json",
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=token)
+    }
+    user_playlists_request = requests.get(endpoint, headers = headers)
+
+    user_playlists = user_playlists_request.json()
+
+    return user_playlists
+
 if __name__ == "__main__":
 
     # Extract part of the ETL process
@@ -69,17 +85,21 @@ if __name__ == "__main__":
     user_playlists = user_playlists_request.json()
 
     mixtape_choices = ["Daily Mix 1", "Daily Mix 2", "Daily Mix 3", "Daily Mix 4", "Daily Mix 5", "Daily Mix 6", "Discover Weekly", "Release Radar"]
-    playlist_titles = []
+    playlist_titles = {}
     for title in range(0, len(user_playlists['items'])) : 
         if user_playlists['items'][title]["name"] in mixtape_choices:
-            playlist_titles.append(user_playlists['items'][title]["name"])
+            playlist_titles[user_playlists['items'][title]["id"]] = user_playlists['items'][title]["name"]
     
-    playlist_dict = {}
-    for i in range(len(playlist_titles)) :
-        playlist_dict[i] = {user_playlists['items'][i]["id"] : {f'{playlist_titles[i]}', {}}}
-
-    print(playlist_dict)
-
+    # playlist_dict = {}
+    # playlist_data = {}
+    # for playlist in range(0, len(playlist_titles)) :
+    #     playlist_data = getPlaylist(playlistToken, user_playlists['items'][playlist]["id"])
+    #     playlist_dict[playlist] = {user_playlists['items'][playlist]["id"] : {f'{playlist_titles[playlist]}'}} # [INDEX] -> ID : Name
+    #     for track in range(0, len(playlist_data)):
+    #         playlist_dict[playlist][playlist_titles[playlist]] = {playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]}
+    
+    print(playlist_titles)
+    # print(playlist_dict)
     # playlist_url = []
     
 
@@ -140,15 +160,17 @@ if __name__ == "__main__":
     # # print(df.head)
     
     # # Job scheduling 
-def gettrackAudioFeatures(token, ids):
-    endpoint = "https://api.spotify.com/v1/audio-features?ids={ids}"
-    getHeader = {
-        "Accept" : "application/json",
-        "Content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=token)
-    }
+# def gettrackAudioFeatures(token, ids):
+#     endpoint = "https://api.spotify.com/v1/audio-features?ids={ids}"
+#     getHeader = {
+#         "Accept" : "application/json",
+#         "Content-Type" : "application/json",
+#         "Authorization" : "Bearer {token}".format(token=token)
+#     }
 
-    res = requests.get(endpoint, headers=getHeader)
-    track_features = res.json()
+#     res = requests.get(endpoint, headers=getHeader)
+#     track_features = res.json()
     
-    return track_features
+#     return track_features
+
+
