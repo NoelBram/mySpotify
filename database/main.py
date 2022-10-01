@@ -21,10 +21,10 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQAWqVMfKv6t5oPjLJRcBkcXbNx2Eqgd9GJlcYi0UD1f9eLif3oFgawJ5E3XK6lrfTuW9W_tsCwZasDlcZVnlKUfRcQylEaEstfXRfYrR4JLJuzOXV3kr8KEimW74L-JjtnNZ3xjltV0_8SPOgemq29ifuGZMmw1DI05KDXmmGqvSwIOvNYnlgizMmT7RYdyFA2BD_lDe9OjiEAQLvU" # your Spotify API token
+USER_PLAYLISTS_TOKEN = "BQDWJNPSg-pshY5qeCC8bEwuuFdmnXxKHIkvnLoeX9St4R-Cs3VyZjwVDRdsFM7J8l5m8nB7wy7371RotZ8AS9GT4NzyYdG8DyF8VoZ_gHAtSEqCDO5vaugUyRDCtbJs1LXT8Yap4UKGcuoKtAhW8FFJm0lb2ukh3gdDj8QZxcwZPwCZx3dwLefbBBVdkRRHJ9PTMNMlzsuo-BL8lRo" # your Spotify API token
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLIST_TOKEN = "BQBlgOJSB5SiEZkmM79XiWdl46ZIIHC6y8KHhk8L8azplAkS0bEFFNsELbtilqjISIIYdtuEGekk230D_8DWWiK-QD1fyGp_CrhvZarXFdpmRhpLcuzFUrUHofOftRcrtCfgKunAVgqW8vHvZjF5N6RIvIJyaPCAFZCR4MeUjsEmJGAr8bWWaSXDJHMfvANnn0s"
+PLAYLIST_TOKEN = "BQBZ1Ifu7fhFjdRp0UinzVqzQog2CSSePyvCxTlxTjPr06MVFgl4Qi8Wbzo5_fDBoEk-F2QShO11XqCR8ZknFZd5RoQuqRs5jMnWMwE_T2JpAfMs8gmnVZUf0hIN_yERVsH6GKQoOBL8Fla57Kdn6Y3IBugvsrUYRgHDnDZ342NxRtuEJagIIM3M8OciIDN2pVc"
 
 def getAccessToken(clientID, clientSecret):
     message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
@@ -120,26 +120,23 @@ def getUserPlaylis(token, id):
     playlist_titles = {}
     for title in range(0, len(user_playlists['items'])) : 
         if user_playlists['items'][title]["name"] in mixtape_choices:
-            playlist_titles[user_playlists['items'][title]["id"]] = user_playlists['items'][title]["name"]
-    return playlist_titles
+            playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
+    playlist_dict = {}
+    playlist_data = {}
+    for playlist in range(0, len(playlist_titles)) :
+        playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  
+        tracks = {}
+        for track in range(0, len(playlist_data)):
+            tracks.update({playlist_data['tracks']['items'][track]['track']["id"] : playlist_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+        playlist_dict[list(playlist_titles.keys())[playlist]] = {list(playlist_titles.values())[playlist] : tracks} # NAME : {TRACKS}
+ 
+    return json.dumps(playlist_dict, indent = 4)
 
 
 
 
 if __name__ == "__main__":
-    # Extract part of the ETL process
-    playlist_titles = getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID)
-    playlist_dict = {}
-    playlist_data = {}
-    for playlist in range(0, len(playlist_titles)) :
-        playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  # get songs with ids
-        tracks = {}
-        for track in range(0, len(playlist_data)):
-            tracks.update({playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]})
-        playlist_dict[list(playlist_titles.keys())[playlist]] = {list(playlist_titles.values())[playlist] : tracks}
-        
-    # print(playlist_titles)
-    print(json.dumps(playlist_dict, indent = 4))
+    print(getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID))
     # songs = getLikedSongs()
     # print(songs)
     # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
