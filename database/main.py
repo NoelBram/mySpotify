@@ -21,10 +21,10 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQBM9jsYX0yS7agqQuiaH9xSUQTSBZ3d2rn0q_zpMLjxs_mCJCPc1i4e3vmwwdHOYqbliH1qadnSppvnP3WsWMofC7MzIjYis9OSHhWZTD3tuAEQFyPjujr-8AG9CF32uiP8dwyIScjdlZ_nb5ihgLCgBXwohK5ESTPMp4UhVXGmrBd7T9B682yRnXE5byXtJ5hzbMalPyhSL29GjMg" # your Spotify API token
+USER_PLAYLISTS_TOKEN = "BQAWqVMfKv6t5oPjLJRcBkcXbNx2Eqgd9GJlcYi0UD1f9eLif3oFgawJ5E3XK6lrfTuW9W_tsCwZasDlcZVnlKUfRcQylEaEstfXRfYrR4JLJuzOXV3kr8KEimW74L-JjtnNZ3xjltV0_8SPOgemq29ifuGZMmw1DI05KDXmmGqvSwIOvNYnlgizMmT7RYdyFA2BD_lDe9OjiEAQLvU" # your Spotify API token
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLIST_TOKEN = "BQArW9StponT7Js5wJvW-KMUoA97Z7y1lQ3DI1Jwe_W7eQ-fTtNrvqcmWK3_nzCXo3zqfITaYh3uQZhNUSCUHRsqo_ks9rQkvipvBuBj9pv1bNNBSZ6aFiez36SC3qFEAgccPNt8yWgWyW7NEbsxQY2U9P4_c6yVs-mATrGTPjYcDJrS3aIfWESpZydBjdXsM-c"
+PLAYLIST_TOKEN = "BQBlgOJSB5SiEZkmM79XiWdl46ZIIHC6y8KHhk8L8azplAkS0bEFFNsELbtilqjISIIYdtuEGekk230D_8DWWiK-QD1fyGp_CrhvZarXFdpmRhpLcuzFUrUHofOftRcrtCfgKunAVgqW8vHvZjF5N6RIvIJyaPCAFZCR4MeUjsEmJGAr8bWWaSXDJHMfvANnn0s"
 
 def getAccessToken(clientID, clientSecret):
     message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
@@ -133,10 +133,11 @@ if __name__ == "__main__":
     playlist_data = {}
     for playlist in range(0, len(playlist_titles)) :
         playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  # get songs with ids
-        playlist_dict[list(playlist_titles.keys())[playlist]] = list(playlist_titles.values())[playlist]
+        tracks = {}
         for track in range(0, len(playlist_data)):
-            playlist_dict.update({playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]})
-
+            tracks.update({playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]})
+        playlist_dict[list(playlist_titles.keys())[playlist]] = {list(playlist_titles.values())[playlist] : tracks}
+        
     # print(playlist_titles)
     print(json.dumps(playlist_dict, indent = 4))
     # songs = getLikedSongs()
