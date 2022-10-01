@@ -91,6 +91,7 @@ def getPlaylist(token, id):
 
     return user_playlists
 
+#  TODO: need to find away to access user Liked Songs playlist
 def getLikedSongs():
     endpoint = "https://api.spotify.com/v1/{user_id}/tracks".format(user_id = USER_ID)
     headers = {
@@ -104,17 +105,15 @@ def getLikedSongs():
 
     return user_playlists
 
-if __name__ == "__main__":
-    # Extract part of the ETL process
-    endpoint = "https://api.spotify.com/v1/users/{user_id}/playlists".format(user_id = USER_ID)
+def getUserPlaylis(token, id):
+    endpoint = "https://api.spotify.com/v1/users/{user_id}/playlists".format(user_id = id)
     headers = {
         "Accept" : "application/json",
         "Content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=USER_PLAYLISTS_TOKEN)
+        "Authorization" : "Bearer {token}".format(token=token)
     }
-    
-    user_playlists_request = requests.get(endpoint, headers = headers)
 
+    user_playlists_request = requests.get(endpoint, headers = headers)
     user_playlists = user_playlists_request.json()
 
     mixtape_choices = ["Daily Mix 1", "Daily Mix 2", "Daily Mix 3", "Daily Mix 4", "Daily Mix 5", "Daily Mix 6", "Discover Weekly", "Release Radar"]
@@ -122,6 +121,14 @@ if __name__ == "__main__":
     for title in range(0, len(user_playlists['items'])) : 
         if user_playlists['items'][title]["name"] in mixtape_choices:
             playlist_titles[user_playlists['items'][title]["id"]] = user_playlists['items'][title]["name"]
+    return playlist_titles
+
+
+
+
+if __name__ == "__main__":
+    # Extract part of the ETL process
+    playlist_titles = getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID)
     playlist_dict = {}
     playlist_data = {}
     for playlist in range(0, len(playlist_titles)) :
