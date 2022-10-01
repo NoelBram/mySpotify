@@ -1,26 +1,57 @@
 from contextlib import nullcontext
 import copy
 import sqlite3
+from textwrap import indent
 from xml.etree.ElementTree import tostring
 # from flask import Flask
 # import sqlalchemy
 import pandas as pd 
 # from sqlalchemy.orm import sessionmaker
 import requests
-# import json
+import json
 from datetime import datetime
 import datetime
 # from keyvalue_sqlite import KeyValueSqlite
+import base64
+
+CLIENT_ID = "7ece4bb7979f433ab4a0a604bc2f97b5"
+CLIENT_SECRET = "3e59cc5912dc4a47b39f7fc2db529366"
 
 DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
-TOKEN = "BQAp2QHWJBYsnJLRgWyfY5VIDqWlKeQN2TQYC9kV_tdqPk1rOjB6DD6aHSZ2YrB5S-ozYQORyXqQcu9I8tY5A042nkNuw3Pkfn3OVDWz6KrSacPYehcpfRoX-y5AfK3CzQbpS54VG6I2AFuWCwtOwSKG6_pN8BLHHrjsoOkkW9uwYefxUOn-Rve2tPnlrL2iVYKEBfa4461naTD_fQ0" # your Spotify API token
 
-playlistToken = "BQB04wwbyexluap3DSuDO2mRCxoi1bpVr2hiSw3_0fyy360_P2d6Ukp0cFDj3sT6eY44jfpqSCrwCBX0cgGAAAWrPWPps8uo1tnVWG-LmfgC8iVZgVW-1S8antfNoTN32ZWlW3Lad0UluGNMD_vW78D6sJJT2gkM7e3tDr7mWfRM4Smo-SHqRX9GqDQTrVIp9r0"
+# Get New ID here -> https://developer.spotify.com/console/get-playlists/
+USER_PLAYLISTS_TOKEN = "BQBM9jsYX0yS7agqQuiaH9xSUQTSBZ3d2rn0q_zpMLjxs_mCJCPc1i4e3vmwwdHOYqbliH1qadnSppvnP3WsWMofC7MzIjYis9OSHhWZTD3tuAEQFyPjujr-8AG9CF32uiP8dwyIScjdlZ_nb5ihgLCgBXwohK5ESTPMp4UhVXGmrBd7T9B682yRnXE5byXtJ5hzbMalPyhSL29GjMg" # your Spotify API token
 
-# Generate your token here:  https://developer.spotify.com/console/get-recently-played/
-# Note: You need a Spotify account (can be easily created for free)
-# to avoid the garbage in -> garbage out in the data validation step
+# Get New ID here -> https://developer.spotify.com/console/get-playlist/
+PLAYLIST_TOKEN = "BQArW9StponT7Js5wJvW-KMUoA97Z7y1lQ3DI1Jwe_W7eQ-fTtNrvqcmWK3_nzCXo3zqfITaYh3uQZhNUSCUHRsqo_ks9rQkvipvBuBj9pv1bNNBSZ6aFiez36SC3qFEAgccPNt8yWgWyW7NEbsxQY2U9P4_c6yVs-mATrGTPjYcDJrS3aIfWESpZydBjdXsM-c"
+
+def getAccessToken(clientID, clientSecret):
+    message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
+    message_bytes= message.encode('ascii') # 메세지 ascii code로 인코딩
+    base64_bytes = base64.b64encode(message_bytes)  
+    base64_message = base64_bytes.decode('ascii')
+
+    # print(base64_message) 
+    # curl -X "POST" -H "Autorization: Basic Zj....Y0NDQ=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
+    # 반드시 Basic 뒤에 한칸 뛰어야 합니다.
+    endpoint = "https://accounts.spotify.com/api/token"
+    headers = {
+        "Accept" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=base64_message),
+        "Content-Type" : "application/json",
+    }
+    data = {
+         "grant_type" : "client_credentials",
+    }
+    user_playlists_request = requests.get(endpoint, headers = headers, data = data)
+
+    # print(user_playlists_request) # <Response [200]> 
+    # responseObject = user_playlists_request.json() # json 
+    # accessToken = responseObject['access_token']
+
+    return user_playlists_request
+
 def check_if_valid_data(df: pd.DataFrame) -> bool:
     # Check if dataframe is empty
     if df.empty:
@@ -45,17 +76,27 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
     # for timestamp in timestamps:
     #     if datetime.datetime.strptime(timestamp, '%Y-%m-%d') != yesterday:
     #         raise Exception("At least one of the returned playlists does not have a yesterday's timestamp")
-            
-
     return True
-
 
 def getPlaylist(token, id):
     endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}".format(playlist_id = id)
     headers = {
         "Accept" : "application/json",
-        "Content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=token)
+        "Authorization" : "Bearer {token}".format(token=token),
+        "Content-Type" : "application/json"
+    }
+    user_playlists_request = requests.get(endpoint, headers = headers)
+
+    user_playlists = user_playlists_request.json()
+
+    return user_playlists
+
+def getLikedSongs():
+    endpoint = "https://api.spotify.com/v1/{user_id}/tracks".format(user_id = USER_ID)
+    headers = {
+        "Accept" : "application/json",
+        "Authorization" : "Bearer {token}".format(token=USER_PLAYLISTS_TOKEN),
+        "Content-Type" : "application/json"
     }
     user_playlists_request = requests.get(endpoint, headers = headers)
 
@@ -64,22 +105,14 @@ def getPlaylist(token, id):
     return user_playlists
 
 if __name__ == "__main__":
-
     # Extract part of the ETL process
     endpoint = "https://api.spotify.com/v1/users/{user_id}/playlists".format(user_id = USER_ID)
     headers = {
         "Accept" : "application/json",
         "Content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=TOKEN)
+        "Authorization" : "Bearer {token}".format(token=USER_PLAYLISTS_TOKEN)
     }
     
-    # # Convert time to Unix timestamp in miliseconds      
-    # today = datetime.datetime.now()
-    # yesterday = today - datetime.timedelta(days=60)
-    # yesterday_unix_timestamp = int(yesterday.timestamp()) * 1000
-
-    # Download all playlists you've listened to "after yesterday", which means in the last 24 hours      
-    # r = requests.get(endpoint, headers = headers)
     user_playlists_request = requests.get(endpoint, headers = headers)
 
     user_playlists = user_playlists_request.json()
@@ -89,17 +122,19 @@ if __name__ == "__main__":
     for title in range(0, len(user_playlists['items'])) : 
         if user_playlists['items'][title]["name"] in mixtape_choices:
             playlist_titles[user_playlists['items'][title]["id"]] = user_playlists['items'][title]["name"]
-    
-    # playlist_dict = {}
-    # playlist_data = {}
-    # for playlist in range(0, len(playlist_titles)) :
-    #     playlist_data = getPlaylist(playlistToken, user_playlists['items'][playlist]["id"])
-    #     playlist_dict[playlist] = {user_playlists['items'][playlist]["id"] : {f'{playlist_titles[playlist]}'}} # [INDEX] -> ID : Name
-    #     for track in range(0, len(playlist_data)):
-    #         playlist_dict[playlist][playlist_titles[playlist]] = {playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]}
-    
-    print(playlist_titles)
-    # print(playlist_dict)
+    playlist_dict = {}
+    playlist_data = {}
+    for playlist in range(0, len(playlist_titles)) :
+        playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  # get songs with ids
+        playlist_dict[list(playlist_titles.keys())[playlist]] = list(playlist_titles.values())[playlist]
+        for track in range(0, len(playlist_data)):
+            playlist_dict.update({playlist_data['tracks']['items'][track]['track']["name"] : playlist_data['tracks']['items'][track]['track']["id"]})
+
+    # print(playlist_titles)
+    print(json.dumps(playlist_dict, indent = 4))
+    # songs = getLikedSongs()
+    # print(songs)
+    # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
     # playlist_url = []
     
 
@@ -157,9 +192,9 @@ if __name__ == "__main__":
 
     # conn.close()
     # print("Close database successfully")
-    # # print(df.head)
+    # print(df.head)
     
-    # # Job scheduling 
+    # Job scheduling 
 # def gettrackAudioFeatures(token, ids):
 #     endpoint = "https://api.spotify.com/v1/audio-features?ids={ids}"
 #     getHeader = {
