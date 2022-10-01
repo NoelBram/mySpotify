@@ -21,10 +21,10 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQDWJNPSg-pshY5qeCC8bEwuuFdmnXxKHIkvnLoeX9St4R-Cs3VyZjwVDRdsFM7J8l5m8nB7wy7371RotZ8AS9GT4NzyYdG8DyF8VoZ_gHAtSEqCDO5vaugUyRDCtbJs1LXT8Yap4UKGcuoKtAhW8FFJm0lb2ukh3gdDj8QZxcwZPwCZx3dwLefbBBVdkRRHJ9PTMNMlzsuo-BL8lRo" # your Spotify API token
+USER_PLAYLISTS_TOKEN = "BQCS0UWiyfWVoRpZ-BglkyANtjA-D8NmwvAutkvR1rfCtaTjSj45A9SKCJgGVHPomoAt2Bv0gAi35ZEWsR2G-yZ1zoFlNkOueXG6m9k57Up8LWZA3G4Uatr3sIgn2jUCEIymemVfRqeL9V72c13-z2vTZCuI4FJMSEk3ADhuLH5peNZbe7Y0hkBdr5UJB8mXEE4Ri3NDAIXJYwr298Y" # your Spotify API token
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLIST_TOKEN = "BQBZ1Ifu7fhFjdRp0UinzVqzQog2CSSePyvCxTlxTjPr06MVFgl4Qi8Wbzo5_fDBoEk-F2QShO11XqCR8ZknFZd5RoQuqRs5jMnWMwE_T2JpAfMs8gmnVZUf0hIN_yERVsH6GKQoOBL8Fla57Kdn6Y3IBugvsrUYRgHDnDZ342NxRtuEJagIIM3M8OciIDN2pVc"
+PLAYLIST_TOKEN = "BQBq3iQCdOdBPsdlcpWZhsI2yfs0BwqIXFYZ6eaqAPZPw1RCGTMEzKnCC3jb7vn7jVoj-6D66zYU0lFP8fhTn5Rx_j4apOl2Dio0w1Q45iOIx_Ja6DFt4zvAMkbjbEQ83R4s1Fo5iJNqyDvU_g-TqqWPRNRM-43yAnGBscyas4n_SzQFxs6Z6t_5qimmPhGUObc"
 
 def getAccessToken(clientID, clientSecret):
     message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
@@ -123,18 +123,15 @@ def getUserPlaylis(token, id):
             playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
     playlist_dict = {}
     playlist_data = {}
-    plist = {}
     for playlist in range(0, len(playlist_titles)) :
         playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  
         tracks = {}
         for track in range(0, len(playlist_data)):
             tracks.update({playlist_data['tracks']['items'][track]['track']["id"] : playlist_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
-        playlist_dict.update({"id":list(playlist_titles.keys())[playlist]}) 
-        playlist_dict.update({"tracks":tracks}) 
-        plist[list(playlist_titles.values())[playlist]] = playlist_dict
+        playlist_dict.update({playlist : {"id":list(playlist_titles.keys())[playlist], "name":list(playlist_titles.values())[playlist], "tracks":tracks}}) 
       # NAME : {TRACKS}
  
-    return json.dumps(plist, indent = 4)
+    return json.dumps(playlist_dict, indent = 4)
 
 
 
