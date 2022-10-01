@@ -123,14 +123,18 @@ def getUserPlaylis(token, id):
             playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
     playlist_dict = {}
     playlist_data = {}
+    plist = {}
     for playlist in range(0, len(playlist_titles)) :
         playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  
         tracks = {}
         for track in range(0, len(playlist_data)):
             tracks.update({playlist_data['tracks']['items'][track]['track']["id"] : playlist_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
-        playlist_dict[list(playlist_titles.keys())[playlist]] = {list(playlist_titles.values())[playlist] : tracks} # NAME : {TRACKS}
+        playlist_dict.update({"id":list(playlist_titles.keys())[playlist]}) 
+        playlist_dict.update({"tracks":tracks}) 
+        plist[list(playlist_titles.values())[playlist]] = playlist_dict
+      # NAME : {TRACKS}
  
-    return json.dumps(playlist_dict, indent = 4)
+    return json.dumps(plist, indent = 4)
 
 
 
