@@ -21,10 +21,13 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQCS0UWiyfWVoRpZ-BglkyANtjA-D8NmwvAutkvR1rfCtaTjSj45A9SKCJgGVHPomoAt2Bv0gAi35ZEWsR2G-yZ1zoFlNkOueXG6m9k57Up8LWZA3G4Uatr3sIgn2jUCEIymemVfRqeL9V72c13-z2vTZCuI4FJMSEk3ADhuLH5peNZbe7Y0hkBdr5UJB8mXEE4Ri3NDAIXJYwr298Y" # your Spotify API token
+USER_PLAYLISTS_TOKEN = "BQDza1ZLuvUFeQlUKUsUMlfOJl6owhHCV3MOX_HSCc36FSLDqK2ZHgUnLZN8fGd2fNQxoxyxGCHWj30lZTx6oEBCfuQSsoe7V21gTvcooBgbo24WCohT06tA2n8wvTH2mvoZXVf1_f53xtH7BuEaBd4U_ESiT6jGWOlOe5wD20AwLgAl0__qJOXrUO7epF7c_Y6Xqdz6Q2DlsCTNkkU" # your Spotify API token
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLIST_TOKEN = "BQBq3iQCdOdBPsdlcpWZhsI2yfs0BwqIXFYZ6eaqAPZPw1RCGTMEzKnCC3jb7vn7jVoj-6D66zYU0lFP8fhTn5Rx_j4apOl2Dio0w1Q45iOIx_Ja6DFt4zvAMkbjbEQ83R4s1Fo5iJNqyDvU_g-TqqWPRNRM-43yAnGBscyas4n_SzQFxs6Z6t_5qimmPhGUObc"
+PLAYLISTS_TOKEN = "BQDCWkPPQDDlgJKJDIlZWOPPUMWzeZUd_W6M1B8CK-Zc0RpHG00I2x8chZu5VPQr93F-zOxODgZNnJgRxLFoA80HxS9B_4xa6xrZIhiPs9pCx70-ptPRpy2EcG0MgJwr_X6eTBGRWs3WQkQBGcLbhrLNZI1G6Zgj5GhB6S3YyZ8jQHLHru0vMvndC4CmSKOMNEQ"
+
+# Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
+PLAYLIST_ITEMS_TOKEN = "BQCfsPdKSlM2c_auLW3KBkGBLWspNy2Kud6FRSyYRzM9wvnUSatAVxjM8PdhEutz8b6f2YYGRPHJ36piDWvKyiafyeE3UNlcWztn2CDqykKmX6rXsfx0d4NvEPfduydimNHvs5MSckFvz0dxVU7uJVI5ZGjJvbtZ15QqqvtfzOcSrWe8e8c8GaJ21Alvn_AAVxKJtb4XH2dutIs5"
 
 def getAccessToken(clientID, clientSecret):
     message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
@@ -92,11 +95,11 @@ def getPlaylist(token, id):
     return user_playlists
 
 #  TODO: need to find away to access user Liked Songs playlist
-def getLikedSongs():
-    endpoint = "https://api.spotify.com/v1/{user_id}/tracks".format(user_id = USER_ID)
+def getTracks(token, id):
+    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks".format(playlist_id = id)
     headers = {
         "Accept" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=USER_PLAYLISTS_TOKEN),
+        "Authorization" : "Bearer {token}".format(token=token),
         "Content-Type" : "application/json"
     }
     user_playlists_request = requests.get(endpoint, headers = headers)
@@ -124,12 +127,15 @@ def getUserPlaylis(token, id):
     playlist_dict = {}
     playlist_data = {}
     for playlist in range(0, len(playlist_titles)) :
-        playlist_data = getPlaylist(PLAYLIST_TOKEN, list(playlist_titles.keys())[playlist])  
+        playlist_data = getPlaylist(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
         tracks = {}
         for track in range(0, len(playlist_data)):
             tracks.update({playlist_data['tracks']['items'][track]['track']["id"] : playlist_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
         playlist_dict.update({playlist : {"id":list(playlist_titles.keys())[playlist], "name":list(playlist_titles.values())[playlist], "tracks":tracks}}) 
-      # NAME : {TRACKS}
+        # INDEX : {
+        #     TRACK_ID :  
+        #     TRACK_NAME :
+        #     TRACK_TRACKS : {Track_ID : track_title}}
  
     return json.dumps(playlist_dict, indent = 4)
 
@@ -137,8 +143,9 @@ def getUserPlaylis(token, id):
 
 
 if __name__ == "__main__":
-    print(getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID))
-    # songs = getLikedSongs()
+    # print(getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID))
+    print(getTracks(PLAYLIST_ITEMS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
+    # songs = getTracks()
     # print(songs)
     # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
     # playlist_url = []
@@ -213,5 +220,3 @@ if __name__ == "__main__":
 #     track_features = res.json()
     
 #     return track_features
-
-
