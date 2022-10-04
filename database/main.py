@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 import copy
+from pyexpat.model import XML_CTYPE_ANY
 import sqlite3
 from textwrap import indent
 from xml.etree.ElementTree import tostring
@@ -21,13 +22,13 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = ""
-
-# Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLISTS_TOKEN = "BQDPFVRJI7bwtAEBpKcGrZLe5HMtmkCm0eqAjoXxePqSWi9OLJ62FPj4hzj9tI0XxDMKpLodKwA16soJwTVY-0HGxROuHyuSZymeAGNt_0zJ8N_i40tXzVDleWL7cq_JA2Y4ZPVz24Dd2uFLXj1DqKhzB4KAh-DffONbGK0mbL0JR7avoBmRQlgKi6-iZiCgx10"
+USER_PLAYLISTS_TOKEN = "BQBhvCCnNv8RDpzw07vzmMRbPMdsttzrHDpMGKRxPwr_YWdhYuCpSJh-10ksKTS9aWuaYAerJWEErVurwatwYWgCD9gZCGqmHutKppsUYpWgi-oFaziGWNKdg_Lawt0LpMpa6c8PMB1IEuH6EARpReNvVSVKhcQVYXhFLV4CC6aSDqjCcPTCbTyZSmKPf7K5m810ergh89mtmDU50FQ"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
-PLAYLIST_ITEMS_TOKEN = "BQCfsPdKSlM2c_auLW3KBkGBLWspNy2Kud6FRSyYRzM9wvnUSatAVxjM8PdhEutz8b6f2YYGRPHJ36piDWvKyiafyeE3UNlcWztn2CDqykKmX6rXsfx0d4NvEPfduydimNHvs5MSckFvz0dxVU7uJVI5ZGjJvbtZ15QqqvtfzOcSrWe8e8c8GaJ21Alvn_AAVxKJtb4XH2dutIs5"
+PLAYLISTS_TOKEN = "BQDKMX3GPU7oHk8uvKwrTdW0HlPXjIifnzvjQEpahTDmbN5rdQqiDQmBEfsq6DLE1ukNWa56NjER5HJWodKussDoap73pGN0mAcKmBiCTWrLKHZt0lryCKjvjgW20T8l0ffxv_2eW8idK8MNCF77eIf_uIKqM-eVzEWM0nIrNp7UwfbxiZ-qULdv062V2HMh6YQ2UMFnM3BzzEG4"
+
+# Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
+PLAYLIST_ITEMS_TOKEN = ""
 
 def getAccessToken(clientID, clientSecret):
     client_id_and_secret = '{client_id}:{client_secret}'.format(client_id=clientID, client_secret=clientSecret)
@@ -44,60 +45,69 @@ def getAccessToken(clientID, clientSecret):
 
     return access_token
 
-def apiGetSpotify(ep):
-    access_token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
-    if ep.startswith("https://"):
-        endpoint = ep
-    else:
-        endpoint = 'https://api.spotify.com/v1/' + ep
+# def apiGetSpotify(ep):
+#     access_token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
+#     if ep.startswith("https://"):
+#         endpoint = ep
+#     else:
+#         endpoint = 'https://api.spotify.com/v1/' + ep
 
-    headers = {'Authorization': 'Bearer ' + access_token}
+#     headers = {'Authorization': 'Bearer ' + access_token}
 
-    try:
-        response = requests.get(endpoint, headers=headers, verify=False)
-    except Exception as ex:
-        print("err - common.py - apiGetSpotify3 --> " + str(type(ex)) + " - " + str(ex.args) + " - " + str(ex))
-        return ''
-    return response.json()
+#     try:
+#         response = requests.get(endpoint, headers=headers, verify=False)
+#     except Exception as ex:
+#         print("err - common.py - apiGetSpotify3 --> " + str(type(ex)) + " - " + str(ex.args) + " - " + str(ex))
+#         return ''
+#     return response.json()
 
-def check_if_valid_data(df: pd.DataFrame) -> bool:
-    # Check if dataframe is empty
-    if df.empty:
-        print("No playlists downloaded. Finishing execution")
-        return False 
+# def check_if_valid_data(df: pd.DataFrame) -> bool:
+#     # Check if dataframe is empty
+#     if df.empty:
+#         print("No playlists downloaded. Finishing execution")
+#         return False 
 
-    # Primary Key Check
-    if pd.Series(df['played_at']).is_unique:
-        pass
-    else:
-        raise Exception("Primary Key check is violated")
+#     # Primary Key Check
+#     if pd.Series(df['played_at']).is_unique:
+#         pass
+#     else:
+#         raise Exception("Primary Key check is violated")
 
-    # Check for nulls
-    if df.isnull().values.any():
-        raise Exception("Null values found")
+#     # Check for nulls
+#     if df.isnull().values.any():
+#         raise Exception("Null values found")
 
-    # # Check that all timestamps are of yesterday's date
-    # yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-    # yesterday = yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
+#     # # Check that all timestamps are of yesterday's date
+#     # yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+#     # yesterday = yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
 
-    # timestamps = df["timestamp"].tolist()
-    # for timestamp in timestamps:
-    #     if datetime.datetime.strptime(timestamp, '%Y-%m-%d') != yesterday:
-    #         raise Exception("At least one of the returned playlists does not have a yesterday's timestamp")
-    return True
+#     # timestamps = df["timestamp"].tolist()
+#     # for timestamp in timestamps:
+#     #     if datetime.datetime.strptime(timestamp, '%Y-%m-%d') != yesterday:
+#     #         raise Exception("At least one of the returned playlists does not have a yesterday's timestamp")
+#     return True
 
-def getPlaylist(token, id):
-    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}?offset=1000000&limit=1000000&market=ES&".format(playlist_id = id)
-    headers = {
-        "Accept" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=token),
-        "Content-Type" : "application/json"
-    }
-    user_playlists_request = requests.get(endpoint, headers = headers)
+def getTracks(token, id):
+    offset = 0
+    limit = 10
+    tracks = {}
+    while offset < 50:
+        endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks?offset={offset}&limit={limit}".format(playlist_id = id, limit = limit, offset = offset)
+        headers = {
+            "Accept" : "application/json",
+            "Authorization" : "Bearer {token}".format(token=token),
+            "Content-Type" : "application/json"
+        }
+        user_playlists_request = requests.get(endpoint, headers = headers)
+        user_playlists = user_playlists_request.json()
+        for track in range(0, len(user_playlists)):
+            tracks.update({user_playlists['items'][track]['track']["id"] : user_playlists['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+        if offset == 44:
+            limit = 9
+        else :
+            offset += 11
 
-    user_playlists = user_playlists_request.json()
-
-    return user_playlists
+    return tracks
 
 #  TODO: need to find away to access user Liked Songs playlist
 # def getPlaylistItems(id):
@@ -167,8 +177,6 @@ def getUserPlaylists(token, id):
         if user_playlists['items'][title]["name"] in mixtape_choices:
             playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
     playlist_dict = {}
-    playlists_data = {}
-
     # liked_playlist_data = getPlaylist(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG") 
     liked_tracks = {
             "1Zda1I0SUuaj4Ulmc4qCgR": "Etude-fantasie in E-Flat Major, Op. 4, \"Les Vagues\"",
@@ -191,11 +199,7 @@ def getUserPlaylists(token, id):
     #     liked_tracks.update({liked_playlist_data['tracks']['items'][track]['track']["id"] : liked_playlist_data['tracks']['items'][track]['track']["name"]}) 
     
     for playlist in range(0, len(playlist_titles)) :
-        playlists_data = getPlaylist(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
-        tracks = {}
-        for track in range(0, len(playlists_data)):
-            if playlists_data['tracks']['items'][track]['track']["id"] not in liked_tracks.keys():
-                tracks.update({playlists_data['tracks']['items'][track]['track']["id"] : playlists_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+        tracks = getTracks(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
         playlist_dict.update({playlist : {"id":list(playlist_titles.keys())[playlist], "name":list(playlist_titles.values())[playlist], "tracks":tracks}}) 
         # INDEX : {
         #     TRACK_ID :  
@@ -206,9 +210,8 @@ def getUserPlaylists(token, id):
 
 
 if __name__ == "__main__":
-    print(getUserPlaylists(PLAYLISTS_TOKEN, USER_ID))
-    # print(getPlaylistItems(PLAYLIST_ITEMS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
-    # songs = getPlaylistItems()
+    # print(getUserPlaylists(USER_PLAYLISTS_TOKEN, USER_ID))
+    print(getTracks(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
     # print(getTracksFromLikedList())
     # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
     # playlist_url = []
