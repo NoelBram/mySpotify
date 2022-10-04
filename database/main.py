@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 import copy
+from distutils.log import error
 from pyexpat.model import XML_CTYPE_ANY
 import sqlite3
 from textwrap import indent
@@ -22,10 +23,10 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQBhvCCnNv8RDpzw07vzmMRbPMdsttzrHDpMGKRxPwr_YWdhYuCpSJh-10ksKTS9aWuaYAerJWEErVurwatwYWgCD9gZCGqmHutKppsUYpWgi-oFaziGWNKdg_Lawt0LpMpa6c8PMB1IEuH6EARpReNvVSVKhcQVYXhFLV4CC6aSDqjCcPTCbTyZSmKPf7K5m810ergh89mtmDU50FQ"
+USER_PLAYLISTS_TOKEN = "BQBkjR6NT3Stt-8SxTmWs_-86SAnegsLlLpEytdJhK4SjxyY5r8s5RPr9qhlDA3ONG8HyXACdhEdWyFzY6NiuFkMzLu9wzMBVaLYe53LgJLiqTT8_5lFtf7LhCkMzBkiZ0cQDw8P5UTP3sG3jtxr6ioPnOvz4jIXIHt711Smx51ZctObCf4jCJVaMnfwpndneHLOWh5JRkDb_ukH_2c"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
-PLAYLISTS_TOKEN = "BQDKMX3GPU7oHk8uvKwrTdW0HlPXjIifnzvjQEpahTDmbN5rdQqiDQmBEfsq6DLE1ukNWa56NjER5HJWodKussDoap73pGN0mAcKmBiCTWrLKHZt0lryCKjvjgW20T8l0ffxv_2eW8idK8MNCF77eIf_uIKqM-eVzEWM0nIrNp7UwfbxiZ-qULdv062V2HMh6YQ2UMFnM3BzzEG4"
+PLAYLISTS_TOKEN = "BQD-X2c9Lob2zOuha2mJ_e1SXHe1CKaFpQ9DuM20QyRsccUwfXn4L8URLlaaO351jJdVfDYX2I2OGuVmsG-n8eBsCFm9TVuf_ksEDuQeTrSd3X9siWLDDiciXlYWXTvNr9PNq2oFCgHNJzw2Uu9pga2FI3rohOzDx0hzNqhT65MTJ5xzZGdjWaS_DLEbGeK5erYr8Owq014qaYq3"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
 PLAYLIST_ITEMS_TOKEN = ""
@@ -87,27 +88,49 @@ def getAccessToken(clientID, clientSecret):
 #     #         raise Exception("At least one of the returned playlists does not have a yesterday's timestamp")
 #     return True
 
-def getTracks(token, id):
+def getLikedTracks(token, id):
     offset = 0
-    limit = 10
     tracks = {}
-    while offset < 50:
-        endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks?offset={offset}&limit={limit}".format(playlist_id = id, limit = limit, offset = offset)
+    while offset < 10000:
+        endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks?offset={offset}&limit=10".format(playlist_id = id, offset = offset)
         headers = {
             "Accept" : "application/json",
             "Authorization" : "Bearer {token}".format(token=token),
-            "Content-Type" : "application/json"
-        }
+            "Content-Type" : "application/json"}
+
         user_playlists_request = requests.get(endpoint, headers = headers)
         user_playlists = user_playlists_request.json()
         for track in range(0, len(user_playlists)):
-            tracks.update({user_playlists['items'][track]['track']["id"] : user_playlists['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
-        if offset == 44:
-            limit = 9
-        else :
-            offset += 11
-
+            try:
+                tracks.update({user_playlists['items'][track]['track']["id"] : user_playlists['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+            except IndexError: break
+            else: continue
+        offset += 10
     return tracks
+
+LIKED_TRACKS = getLikedTracks(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG") 
+
+def getTracks(token, id):
+    offset = 0
+    tracks = {}
+    while offset < 100:
+        endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks?offset={offset}&limit=10".format(playlist_id = id, offset = offset)
+        headers = {
+            "Accept" : "application/json",
+            "Authorization" : "Bearer {token}".format(token=token),
+            "Content-Type" : "application/json"}
+
+        user_playlists_request = requests.get(endpoint, headers = headers)
+        user_playlists = user_playlists_request.json()
+        for track in range(0, len(user_playlists)):
+            try:
+                if user_playlists['items'][track]['track']["id"] not in LIKED_TRACKS.keys():
+                    tracks.update({user_playlists['items'][track]['track']["id"] : user_playlists['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+            except IndexError: break
+            else: continue
+        offset += 10
+    return tracks
+
 
 #  TODO: need to find away to access user Liked Songs playlist
 # def getPlaylistItems(id):
@@ -177,27 +200,6 @@ def getUserPlaylists(token, id):
         if user_playlists['items'][title]["name"] in mixtape_choices:
             playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
     playlist_dict = {}
-    # liked_playlist_data = getPlaylist(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG") 
-    liked_tracks = {
-            "1Zda1I0SUuaj4Ulmc4qCgR": "Etude-fantasie in E-Flat Major, Op. 4, \"Les Vagues\"",
-            "6xi8VB4eLIPtuoS6PetuvB": "Kamarinskaya (Air russe varie)",
-            "18QVbIw5S0MJHGWF2qLX75": "Kinderszenen, Op. 15: No. 7 in F Major, Tr\u00e4umerei",
-            "4wYmJlEqIme358SxbbmbJ1": "Auf dem Wasser zu singen, D. 774 - Transcription: Franz Liszt, Searle 558 No. 2",
-            "6JPzlzHHdqIdmu28qBHdGF": "10 Pr\u00e9ludes, Op. 23: No. 10 in G-Flat Major - Live",
-            "35pO11yyhKYnOv9L8pLwa8": "New York - Mad Rush",
-            "5MLXPkRlaKeL13QcQFgQua": "Cello Suite No. 3 in C Major, BWV 1009: II. Allemande - Arr. for Piano by Leopold Godowski",
-            "2qHAN7YZvbMcCZeY96KBrf": "Three Romances, Op. 11: No. 1 in E-Flat Minor, Andante",
-            "46TzngK2DGxxn3yO3gjTGe": "Piano Concerto No. 2 Op. 102 in F Major: II. Andante",
-            "2AzkWKhW4nKyKvL0MTWRCX": "Carnaval, Op. 9: 11. Chiarina",
-            "5Q6Yl87BTK0wbGY7XGFZhx": "Nocturne No. 10 In E Minor",
-            "1fKh1fg5frAtnBPn5esvgh": "Prelude in G, Op. 32 No. 5",
-            "2GnYCy70I8cR4oEA2wsSDx": "The Hours: An Unwelcome Friend (From \"The Hours\")",
-            "6cDytuMZ5Z4iMEhK65HiHL": "Nocturne No. 2 in C Minor",
-            "6brnswWmZ8Xdf4MWeskofY": "Adoration"
-        }
-    # for track in range(0, len(liked_playlist_data)):
-    #     liked_tracks.update({liked_playlist_data['tracks']['items'][track]['track']["id"] : liked_playlist_data['tracks']['items'][track]['track']["name"]}) 
-    
     for playlist in range(0, len(playlist_titles)) :
         tracks = getTracks(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
         playlist_dict.update({playlist : {"id":list(playlist_titles.keys())[playlist], "name":list(playlist_titles.values())[playlist], "tracks":tracks}}) 
@@ -210,8 +212,8 @@ def getUserPlaylists(token, id):
 
 
 if __name__ == "__main__":
-    # print(getUserPlaylists(USER_PLAYLISTS_TOKEN, USER_ID))
-    print(getTracks(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
+    print(getUserPlaylists(USER_PLAYLISTS_TOKEN, USER_ID))
+    # print(getTracks(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
     # print(getTracksFromLikedList())
     # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
     # playlist_url = []
