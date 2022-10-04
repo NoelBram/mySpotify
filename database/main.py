@@ -21,39 +21,44 @@ DATABASE_LOCATION = "sqlite:///my_playlists.sqlite"
 USER_ID = "22io3oxgaphrgsxto4naqh4ai"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlists/
-USER_PLAYLISTS_TOKEN = "BQDza1ZLuvUFeQlUKUsUMlfOJl6owhHCV3MOX_HSCc36FSLDqK2ZHgUnLZN8fGd2fNQxoxyxGCHWj30lZTx6oEBCfuQSsoe7V21gTvcooBgbo24WCohT06tA2n8wvTH2mvoZXVf1_f53xtH7BuEaBd4U_ESiT6jGWOlOe5wD20AwLgAl0__qJOXrUO7epF7c_Y6Xqdz6Q2DlsCTNkkU" # your Spotify API token
+USER_PLAYLISTS_TOKEN = ""
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist/
-PLAYLISTS_TOKEN = "BQDCWkPPQDDlgJKJDIlZWOPPUMWzeZUd_W6M1B8CK-Zc0RpHG00I2x8chZu5VPQr93F-zOxODgZNnJgRxLFoA80HxS9B_4xa6xrZIhiPs9pCx70-ptPRpy2EcG0MgJwr_X6eTBGRWs3WQkQBGcLbhrLNZI1G6Zgj5GhB6S3YyZ8jQHLHru0vMvndC4CmSKOMNEQ"
+PLAYLISTS_TOKEN = "BQDPFVRJI7bwtAEBpKcGrZLe5HMtmkCm0eqAjoXxePqSWi9OLJ62FPj4hzj9tI0XxDMKpLodKwA16soJwTVY-0HGxROuHyuSZymeAGNt_0zJ8N_i40tXzVDleWL7cq_JA2Y4ZPVz24Dd2uFLXj1DqKhzB4KAh-DffONbGK0mbL0JR7avoBmRQlgKi6-iZiCgx10"
 
 # Get New ID here -> https://developer.spotify.com/console/get-playlist-tracks/
 PLAYLIST_ITEMS_TOKEN = "BQCfsPdKSlM2c_auLW3KBkGBLWspNy2Kud6FRSyYRzM9wvnUSatAVxjM8PdhEutz8b6f2YYGRPHJ36piDWvKyiafyeE3UNlcWztn2CDqykKmX6rXsfx0d4NvEPfduydimNHvs5MSckFvz0dxVU7uJVI5ZGjJvbtZ15QqqvtfzOcSrWe8e8c8GaJ21Alvn_AAVxKJtb4XH2dutIs5"
 
 def getAccessToken(clientID, clientSecret):
-    message = f"{clientID}:{clientSecret}" # secret.py에 사용자 정보 불러오기
-    message_bytes= message.encode('ascii') # 메세지 ascii code로 인코딩
-    base64_bytes = base64.b64encode(message_bytes)  
-    base64_message = base64_bytes.decode('ascii')
+    client_id_and_secret = '{client_id}:{client_secret}'.format(client_id=clientID, client_secret=clientSecret)
+    client_data = base64.urlsafe_b64encode(client_id_and_secret.encode()).decode()
 
-    # print(base64_message) 
-    # curl -X "POST" -H "Autorization: Basic Zj....Y0NDQ=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
-    # 반드시 Basic 뒤에 한칸 뛰어야 합니다.
     endpoint = "https://accounts.spotify.com/api/token"
-    headers = {
-        "Accept" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=base64_message),
-        "Content-Type" : "application/json",
-    }
-    data = {
-         "grant_type" : "client_credentials",
-    }
-    user_playlists_request = requests.get(endpoint, headers = headers, data = data)
+    headers = {'Content-Type': 'application/x-www-form-urlencoded',
+               'Authorization': 'Basic {}'.format(client_data)}
+    payload = {'grant_type': 'client_credentials'}
+    access_token_request = requests.post(endpoint, headers=headers, data=payload)
 
-    # print(user_playlists_request) # <Response [200]> 
-    # responseObject = user_playlists_request.json() # json 
-    # accessToken = responseObject['access_token']
+    responseObject = access_token_request.json()
+    access_token = responseObject['access_token']
 
-    return user_playlists_request
+    return access_token
+
+def apiGetSpotify(ep):
+    access_token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
+    if ep.startswith("https://"):
+        endpoint = ep
+    else:
+        endpoint = 'https://api.spotify.com/v1/' + ep
+
+    headers = {'Authorization': 'Bearer ' + access_token}
+
+    try:
+        response = requests.get(endpoint, headers=headers, verify=False)
+    except Exception as ex:
+        print("err - common.py - apiGetSpotify3 --> " + str(type(ex)) + " - " + str(ex.args) + " - " + str(ex))
+        return ''
+    return response.json()
 
 def check_if_valid_data(df: pd.DataFrame) -> bool:
     # Check if dataframe is empty
@@ -82,7 +87,7 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
     return True
 
 def getPlaylist(token, id):
-    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}".format(playlist_id = id)
+    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}?offset=1000000&limit=1000000&market=ES&".format(playlist_id = id)
     headers = {
         "Accept" : "application/json",
         "Authorization" : "Bearer {token}".format(token=token),
@@ -95,21 +100,58 @@ def getPlaylist(token, id):
     return user_playlists
 
 #  TODO: need to find away to access user Liked Songs playlist
-def getTracks(token, id):
-    endpoint = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks".format(playlist_id = id)
-    headers = {
-        "Accept" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=token),
-        "Content-Type" : "application/json"
-    }
-    user_playlists_request = requests.get(endpoint, headers = headers)
+# def getPlaylistItems(id):
+#     endpoint = "https://api.spotify.com/v1/{playlist_id}/tracks?offset=0&limit=50".format(playlist_id = id)
+#     headers = {
+#         "Accept" : "application/json",
+#         "Authorization" : "Bearer {token}".format(token=token),
+#         "Content-Type" : "application/json"
+#     }
+#     user_playlists_request = requests.get(endpoint, headers = headers)
 
-    user_playlists = user_playlists_request.json()
+#     user_playlists = user_playlists_request.json()
 
-    return user_playlists
+#     return user_playlists
 
-def getUserPlaylis(token, id):
-    endpoint = "https://api.spotify.com/v1/users/{user_id}/playlists".format(user_id = id)
+# def getTracksFromLikedList():
+#     print("msg - common.py - getTracksFromLikedList --> requesting tracks from liked list.") 
+#     liked_tracks = apiGetSpotify("me/tracks?offset=0&limit=50")
+
+    
+#     '''--> check response before continuing'''
+#     if liked_tracks == '':
+#         print("err - common.py - getTracksFromLikedList2 --> empty api response for liked tracks!")
+#         return ''
+
+
+#     try:
+#         '''--> check pagination - fill resultlist'''
+#         resultList = []
+#         total = liked_tracks["total"]
+#         limit = liked_tracks["limit"]
+#         offset = liked_tracks["offset"]
+
+#         while offset < total:
+#             for track in liked_tracks["items"]:
+#                 if track["track"]["id"]: #check if valid item
+#                     resultList.append(track["track"]["id"]) #add track ID to resultList
+#             offset = offset + limit
+#             if offset < total: #new request
+#                 liked_tracks = apiGetSpotify("me/tracks?offset=" + str(offset) + "&limit=" + str(limit))
+#                 if liked_tracks == '': #invalid api response
+#                     print("err - common.py - getTracksFromLikedList3 --> empty api response for liked tracks!")
+#                     return ''
+#                 continue
+
+#         print("msg - common.py - getTracksFromLikedList4 --> Succesfully returned list of " + str(len(resultList)) + " tracks from liked list.")
+#         return resultList
+
+#     except Exception as ex:
+#         print("err - common.py - getTracksFromLikedList5 --> " + str(type(ex)) + " - " + str(ex.args) + " - " + str(ex))
+#         return ''
+
+def getUserPlaylists(token, id):
+    endpoint = "https://api.spotify.com/v1/users/{user_id}/playlists/".format(user_id = id)
     headers = {
         "Accept" : "application/json",
         "Content-Type" : "application/json",
@@ -125,12 +167,35 @@ def getUserPlaylis(token, id):
         if user_playlists['items'][title]["name"] in mixtape_choices:
             playlist_titles.update({user_playlists['items'][title]["id"] : user_playlists['items'][title]["name"]})  # PLAYLIST_ID : PLAYLIST_NAME
     playlist_dict = {}
-    playlist_data = {}
+    playlists_data = {}
+
+    # liked_playlist_data = getPlaylist(PLAYLISTS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG") 
+    liked_tracks = {
+            "1Zda1I0SUuaj4Ulmc4qCgR": "Etude-fantasie in E-Flat Major, Op. 4, \"Les Vagues\"",
+            "6xi8VB4eLIPtuoS6PetuvB": "Kamarinskaya (Air russe varie)",
+            "18QVbIw5S0MJHGWF2qLX75": "Kinderszenen, Op. 15: No. 7 in F Major, Tr\u00e4umerei",
+            "4wYmJlEqIme358SxbbmbJ1": "Auf dem Wasser zu singen, D. 774 - Transcription: Franz Liszt, Searle 558 No. 2",
+            "6JPzlzHHdqIdmu28qBHdGF": "10 Pr\u00e9ludes, Op. 23: No. 10 in G-Flat Major - Live",
+            "35pO11yyhKYnOv9L8pLwa8": "New York - Mad Rush",
+            "5MLXPkRlaKeL13QcQFgQua": "Cello Suite No. 3 in C Major, BWV 1009: II. Allemande - Arr. for Piano by Leopold Godowski",
+            "2qHAN7YZvbMcCZeY96KBrf": "Three Romances, Op. 11: No. 1 in E-Flat Minor, Andante",
+            "46TzngK2DGxxn3yO3gjTGe": "Piano Concerto No. 2 Op. 102 in F Major: II. Andante",
+            "2AzkWKhW4nKyKvL0MTWRCX": "Carnaval, Op. 9: 11. Chiarina",
+            "5Q6Yl87BTK0wbGY7XGFZhx": "Nocturne No. 10 In E Minor",
+            "1fKh1fg5frAtnBPn5esvgh": "Prelude in G, Op. 32 No. 5",
+            "2GnYCy70I8cR4oEA2wsSDx": "The Hours: An Unwelcome Friend (From \"The Hours\")",
+            "6cDytuMZ5Z4iMEhK65HiHL": "Nocturne No. 2 in C Minor",
+            "6brnswWmZ8Xdf4MWeskofY": "Adoration"
+        }
+    # for track in range(0, len(liked_playlist_data)):
+    #     liked_tracks.update({liked_playlist_data['tracks']['items'][track]['track']["id"] : liked_playlist_data['tracks']['items'][track]['track']["name"]}) 
+    
     for playlist in range(0, len(playlist_titles)) :
-        playlist_data = getPlaylist(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
+        playlists_data = getPlaylist(PLAYLISTS_TOKEN, list(playlist_titles.keys())[playlist])  
         tracks = {}
-        for track in range(0, len(playlist_data)):
-            tracks.update({playlist_data['tracks']['items'][track]['track']["id"] : playlist_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
+        for track in range(0, len(playlists_data)):
+            if playlists_data['tracks']['items'][track]['track']["id"] not in liked_tracks.keys():
+                tracks.update({playlists_data['tracks']['items'][track]['track']["id"] : playlists_data['tracks']['items'][track]['track']["name"]})  # TRACK_NAME : TRACK_ID
         playlist_dict.update({playlist : {"id":list(playlist_titles.keys())[playlist], "name":list(playlist_titles.values())[playlist], "tracks":tracks}}) 
         # INDEX : {
         #     TRACK_ID :  
@@ -140,13 +205,11 @@ def getUserPlaylis(token, id):
     return json.dumps(playlist_dict, indent = 4)
 
 
-
-
 if __name__ == "__main__":
-    # print(getUserPlaylis(USER_PLAYLISTS_TOKEN, USER_ID))
-    print(getTracks(PLAYLIST_ITEMS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
-    # songs = getTracks()
-    # print(songs)
+    print(getUserPlaylists(PLAYLISTS_TOKEN, USER_ID))
+    # print(getPlaylistItems(PLAYLIST_ITEMS_TOKEN, "2OoFqFk4QYnb6DFwifnqlG"))
+    # songs = getPlaylistItems()
+    # print(getTracksFromLikedList())
     # print(getAccessToken(CLIENT_ID, CLIENT_SECRET))
     # playlist_url = []
     
