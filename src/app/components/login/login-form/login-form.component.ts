@@ -58,7 +58,8 @@ export class LoginFormComponent implements OnInit {
 				});
 			} else {
 				this.isLoading = false;
-			}});
+			}
+			});
 		} else {
 			this.authSpotify();
 		}

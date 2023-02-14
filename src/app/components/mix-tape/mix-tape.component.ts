@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfile } from './user-profile';
+import { SpotifyAuthService } from 'src/app/services/spotify.auth';
 
 @Component({
   selector: 'app-mix-tape',
@@ -8,40 +9,23 @@ import { UserProfile } from './user-profile';
 })
 
 export class MixTapeComponent implements OnInit {
-  clientId = "7ece4bb7979f433ab4a0a604bc2f97b5";  // Replace with your client id
-  code: string;
-  profile: UserProfile;
+  profile: any;
 
-  constructor() {}
+  constructor(private spotifyAuthService: SpotifyAuthService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     const params = new URLSearchParams(window.location.hash.substring(1));
-    this.code = params.get("access_token");
+    const code = params.get("access_token");
 
-    if (!this.code) {
-      this.redirectToAuthCodeFlow();
+    if (!code) {
+      this.spotifyAuthService.redirectToAuthCodeFlow();
     } else {
-      this.fetchProfile();
+      this.spotifyAuthService.setAccessToken(code);
+      const profile = await this.spotifyAuthService.fetchProfile();
+      this.profile = profile;
+
+      this.populateUI();
     }
-  }
-
-  redirectToAuthCodeFlow() {
-    const params = new URLSearchParams();
-    params.append("client_id", this.clientId);
-    params.append("response_type", "token");
-    params.append("redirect_uri", "http://localhost:4200/callback");
-    params.append("scope", "user-read-private user-read-email");
-
-    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
-  }
-
-  async fetchProfile() {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET", headers: { Authorization: `Bearer ${this.code}` }
-    });
-
-    this.profile = await result.json();
-    this.populateUI();
   }
 
   populateUI() {

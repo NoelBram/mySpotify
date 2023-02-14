@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpClientModule, HttpParams} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
+import { MixTapeComponent } from '../components/mix-tape/mix-tape.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyAuthService {
-
   private clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
-  private redirectUri = 'http://localhost:4200/callback';
+  private redirectUri = 'http://localhost:4200/login';
   private scope = 'user-library-read user-read-private user-read-email';
   private accessToken: string;
+  private code: string;
 
   constructor(private http: HttpClient) { }
 
@@ -54,11 +55,17 @@ export class SpotifyAuthService {
   /**
    * Get the currently logged-in user's Spotify profile
    */
-  getUserProfile(): Observable<any> {
-    const headers = {
-      'Authorization': `Bearer ${this.accessToken}`
-    };
+  async fetchProfile(): Promise<MixTapeComponent> {
+    const result = await fetch("https://api.spotify.com/v1/me", {
+      method: "GET", headers: { Authorization: `Bearer ${this.code}` }
+    });
 
-    return this.http.get<any>('https://api.spotify.com/v1/me', { headers });
+    return result.json();
   }
+
+  async redirectToAuthCodeFlow() {
+    const authorizationUrl = this.getAuthorizationUrl();
+    window.location.href = authorizationUrl;
+  }
+
 }
