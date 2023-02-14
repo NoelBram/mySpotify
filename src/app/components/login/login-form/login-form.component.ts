@@ -65,11 +65,8 @@ export class LoginFormComponent implements OnInit {
 	}
 
 	authSpotify() {
-		this.spotifyAuthService.getUserProfile().subscribe(response => {
-			this.user = response.user;
-			this.playlists = response.playlists;
-		});
-	}
+		window.location.href = this.spotifyAuthService.getAuthorizationUrl();
+	}	  
 
 	onSubmit() {
 		this.submitted = true;

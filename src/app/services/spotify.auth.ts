@@ -8,7 +8,7 @@ import {Observable, tap} from 'rxjs';
 export class SpotifyAuthService {
 
   private clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
-  private redirectUri = 'http://localhost:4200/login';
+  private redirectUri = 'http://localhost:4200/callback';
   private scope = 'user-library-read user-read-private user-read-email';
   private accessToken: string;
 
