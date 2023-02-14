@@ -1,21 +1,64 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient, HttpClientModule, HttpParams} from '@angular/common/http';
+import {Observable, tap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyAuthService {
-    CLIENT_ID: string = '';
-  constructor(private http: HttpClient){}
 
-  auth(): Observable<any> {
-    return this.http.get(
-      'https://accounts.spotify.com/authorize' +
-      '?response_type=code' +
-      '&client_id=' + '7ece4bb7979f433ab4a0a604bc2f97b5' +
-      '&scope=' + encodeURIComponent('user-read-email playlist-read-private playlist-read-collaborative user-library-read user-library-modify') +
-      '&redirect_uri=' + encodeURIComponent('http://localhost:4200/home')
-    );
+  private clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
+  private redirectUri = 'http://localhost:4200/login';
+  private scope = 'user-library-read user-read-private user-read-email';
+  private accessToken: string;
+
+  constructor(private http: HttpClient) { }
+
+  /**
+   * Get the Spotify authorization URL to redirect the user to
+   */
+  getAuthorizationUrl() {
+    const params = new HttpParams()
+      .set('client_id', this.clientId)
+      .set('redirect_uri', this.redirectUri)
+      .set('scope', this.scope)
+      .set('response_type', 'token');
+
+    return `https://accounts.spotify.com/authorize?${params.toString()}`;
+  }
+
+  setAccessToken(accessToken: string) {
+    this.accessToken = accessToken;
+  }
+
+  /**
+   * Get the access token from the Spotify authorization code
+   * @param code The authorization code received from Spotify
+   */
+  getAccessToken(code: string): Observable<any> {
+    const params = new HttpParams()
+      .set('grant_type', 'authorization_code')
+      .set('code', code)
+      .set('redirect_uri', this.redirectUri)
+      .set('client_id', this.clientId);
+  
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+  
+    return this.http.post<any>('https://accounts.spotify.com/api/token', params.toString(), { headers })
+      .pipe(tap((res: { access_token: string; }) => this.setAccessToken(res.access_token))
+      );
+  }
+  
+  /**
+   * Get the currently logged-in user's Spotify profile
+   */
+  getUserProfile(): Observable<any> {
+    const headers = {
+      'Authorization': `Bearer ${this.accessToken}`
+    };
+
+    return this.http.get<any>('https://api.spotify.com/v1/me', { headers });
   }
 }
