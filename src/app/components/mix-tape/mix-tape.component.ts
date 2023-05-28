@@ -18,7 +18,7 @@ export class MixTapeComponent implements OnInit {
     const code = params.get("access_token");
 
     if (!code) {
-      this.spotifyAuthService.redirectToAuthCodeFlow();
+      this.spotifyAuthService.getUserAuthorization();
     } else {
       this.spotifyAuthService.setAccessToken(code);
       const profile = await this.spotifyAuthService.fetchProfile();
