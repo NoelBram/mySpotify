@@ -7,36 +7,37 @@ import { SpotifyAuthService } from 'src/app/services/spotify.auth';
   templateUrl: './mix-tape.component.html',
   styleUrls: ['./mix-tape.component.css']
 })
-
 export class MixTapeComponent implements OnInit {
-  profile: any;
-
   constructor(private spotifyAuthService: SpotifyAuthService) {}
 
   async ngOnInit() {
-    const params = new URLSearchParams(window.location.hash.substring(1));
-    const code = params.get("access_token");
-
+    const clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    
     if (!code) {
-      this.spotifyAuthService.getUserAuthorization();
+      this.spotifyAuthService.redirectToAuthCodeFlow(clientId);
     } else {
-      this.spotifyAuthService.setAccessToken(code);
-      const profile = await this.spotifyAuthService.fetchProfile();
-      this.profile = profile;
-
-      this.populateUI();
+      const accessToken = await this.spotifyAuthService.getAccessToken(clientId, await code);
+      const profile = await this.spotifyAuthService.fetchProfile(accessToken);
+      this.populateUI(profile);
     }
   }
 
-  populateUI() {
-    document.getElementById("displayName")!.innerText = this.profile.display_name;
-    document.getElementById("avatar")!.setAttribute("src", this.profile.images[0].url)
-    document.getElementById("id")!.innerText = this.profile.id;
-    document.getElementById("email")!.innerText = this.profile.email;
-    document.getElementById("uri")!.innerText = this.profile.uri;
-    document.getElementById("uri")!.setAttribute("href", this.profile.external_urls.spotify);
-    document.getElementById("url")!.innerText = this.profile.href;
-    document.getElementById("url")!.setAttribute("href", this.profile.href);
-    document.getElementById("imgUrl")!.innerText = this.profile.images[0].url;
+  populateUI(profile: any) {
+    document.getElementById('displayName')!.innerText = profile.display_name;
+    document.getElementById('avatar')!.setAttribute('src', profile.images[0].url);
+    document.getElementById('id')!.innerText = profile.id;
+    document.getElementById('email')!.innerText = profile.email;
+    document.getElementById('uri')!.innerText = profile.uri;
+    document.getElementById('uri')!.setAttribute('href', profile.external_urls.spotify);
+    document.getElementById('url')!.innerText = profile.href;
+    document.getElementById('url')!.setAttribute('href', profile.href);
+    document.getElementById('imgUrl')!.innerText = profile.images[0].url;
   }
 }
+
+
+
+
+

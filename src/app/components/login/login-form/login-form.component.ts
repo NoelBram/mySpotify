@@ -25,6 +25,8 @@ export class LoginFormComponent implements OnInit {
 	user:any;
 	playlists: any = [];
 
+	clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
+
 	constructor(private route: ActivatedRoute,
 		private router: Router,
 		private providerService: ProviderService,
@@ -39,34 +41,34 @@ export class LoginFormComponent implements OnInit {
 			});
 		}
 
-	ngOnInit(): void {
-		if (!localStorage.getItem('access_token')) {
-			this.route.queryParams.subscribe(params => {
-			const code = params.code;
-			if (code) {
-				this.spotifyAuthService.getAccessToken(code).subscribe(response => {
-				this.user = response.user;
-				this.localstorageService.setItem('access_token', response.access_token);
-				this.localstorageService.setItem('user', JSON.stringify(response.user));
-				const redirectUrl = sessionStorage.getItem('redirectUrl');
-				if (redirectUrl) {
-					sessionStorage.removeItem('redirectUrl');
-					this.router.navigateByUrl(redirectUrl);
-				} else {
-					this.router.navigate(['/']);
-				}
-				});
-			} else {
-				this.isLoading = false;
-			}
-			});
-		} else {
-			this.authSpotify();
-		}
+	ngOnInit (): void {
+	// 	if (!localStorage.getItem('access_token')) {
+	// 		this.route.queryParams.subscribe(params => {
+	// 		const code = params.code;
+	// 		if (code) {
+	// 			// this.spotifyAuthService.getAccessToken(this.clientId, code).subscribe(response => {
+	// 			this.user = response.user;
+	// 			this.localstorageService.setItem('access_token', response.access_token);
+	// 			this.localstorageService.setItem('user', JSON.stringify(response.user));
+	// 			const redirectUrl = sessionStorage.getItem('redirectUrl');
+	// 			if (redirectUrl) {
+	// 				sessionStorage.removeItem('redirectUrl');
+	// 				this.router.navigateByUrl(redirectUrl);
+	// 			} else {
+	// 				this.router.navigate(['/']);
+	// 			}
+	// 			});
+	// 		} else {
+	// 			this.isLoading = false;
+	// 		}
+	// 		});
+	// 	} else {
+	// 		this.authSpotify();
+	// 	}
 	}
 
 	authSpotify() {
-		window.location.href = this.spotifyAuthService.getAuthorizationUrl();
+		this.spotifyAuthService.redirectToAuthCodeFlow(this.clientId);
 	}	  
 
 	onSubmit() {
