@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalstorageService } from 'src/common/local-storage.service';
 import { ProviderService } from 'src/app/services/provider.service';
-import { SpotifyAuthService } from 'src/app/services/spotify.auth';
 
 @Component({
 	selector: 'app-login-form',
@@ -13,88 +12,30 @@ import { SpotifyAuthService } from 'src/app/services/spotify.auth';
 	styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-	sy = faSpotify;
-	form: FormGroup;
-	email: FormControl = new FormControl("", [Validators.required, Validators.email]);
-	password: FormControl = new FormControl("", [Validators.required]);
-	date = Date();
-	submitted: boolean = false;
 	isLoading: boolean = false;
-	responseMessage: any;
+	sy = faSpotify;
+	private clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
 
-	user:any;
-	playlists: any = [];
+	constructor(){}
 
-	clientId = '7ece4bb7979f433ab4a0a604bc2f97b5';
+	ngOnInit() {}
+	// async ngOnInit() {
+	// 	const params = new URLSearchParams(window.location.search);
+    // 	const code = params.get("code");
 
-	constructor(private route: ActivatedRoute,
-		private router: Router,
-		private providerService: ProviderService,
-		private localstorageService: LocalstorageService,
-		private formBuilder: FormBuilder,
-		private http: HttpClient,
-		private spotifyAuthService: SpotifyAuthService) {
-			this.form = this.formBuilder.group({
-				date: this.date,
-				email: this.email,
-				name: this.password,
-			});
-		}
-
-	ngOnInit (): void {
-	// 	if (!localStorage.getItem('access_token')) {
-	// 		this.route.queryParams.subscribe(params => {
-	// 		const code = params.code;
-	// 		if (code) {
-	// 			// this.spotifyAuthService.getAccessToken(this.clientId, code).subscribe(response => {
-	// 			this.user = response.user;
-	// 			this.localstorageService.setItem('access_token', response.access_token);
-	// 			this.localstorageService.setItem('user', JSON.stringify(response.user));
-	// 			const redirectUrl = sessionStorage.getItem('redirectUrl');
-	// 			if (redirectUrl) {
-	// 				sessionStorage.removeItem('redirectUrl');
-	// 				this.router.navigateByUrl(redirectUrl);
-	// 			} else {
-	// 				this.router.navigate(['/']);
-	// 			}
-	// 			});
-	// 		} else {
-	// 			this.isLoading = false;
-	// 		}
-	// 		});
-	// 	} else {
-	// 		this.authSpotify();
-	// 	}
-	}
+	// 	if (!code) {
+	// 		this.spotifyAuthService.redirectToAuthCodeFlow(this.clientId);
+	// 	  } else {
+	// 		const accessToken = this.spotifyAuthService.getAccessToken(this.clientId, code);
+	// 		const profile =  this.spotifyAuthService.fetchProfile(await accessToken);
+	// 		this.populateUI(profile);
+	// 	  }
+    
+	// }
 
 	authSpotify() {
-		this.spotifyAuthService.redirectToAuthCodeFlow(this.clientId);
+		window.location.href = '/mixtape'
 	}	  
-
-	onSubmit() {
-		this.submitted = true;
-		if (this.form.valid) {
-		  this.isLoading = true;
-		  // logic to submit form goes here
-		  // ...
-		  // Once the form has been submitted, you can set the response message:
-		  this.responseMessage = 'Login successful!';
-		  this.isLoading = false;
-		} else {
-		  this.responseMessage = 'Please enter a valid email and password.';
-		}
-	  }
-	
-	  getEmailErrorMessage() {
-		if (this.email.hasError('required')) {
-		  return 'You must enter an email address';
-		}
-		return this.email.hasError('email') ? 'Not a valid email' : '';
-	  }
-	
-	  getPasswordErrorMessage() {
-		return this.password.hasError('required') ? 'You must enter a password' : '';
-	  }
 }
 
 

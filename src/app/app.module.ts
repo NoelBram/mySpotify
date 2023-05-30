@@ -31,6 +31,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { environment } from '../environments/environment.prod';
 import { SpotifyAuthService } from './services/spotify.auth';
 import { AuthInterceptor } from './services/auth-interceptor';
+
 import { LoadingComponent } from "./common/loading/loading.component";
 import { routes } from "./app-routing.module"
 

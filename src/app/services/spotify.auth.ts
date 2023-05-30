@@ -7,17 +7,8 @@ import { MixTapeComponent } from '../components/mix-tape/mix-tape.component';
   providedIn: 'root'
 })
 export class SpotifyAuthService {
-  private clientId : string;
   private redirectUri = 'http://localhost:4200/mixtape';
-  private scope = 'user-library-read user-read-private user-read-email';
   private accessToken: string;
-  private code: string;
-  private codeChallenge: string;
-  private state = this.generateCodeVerifier(16);
-
-  private codeVerifier :string;
-
-  constructor(private http: HttpClient) { }
 
   generateCodeVerifier(length: number) {
     let text = '';
@@ -38,7 +29,6 @@ export class SpotifyAuthService {
         .replace(/=+$/, '');
   }
 
-
   async redirectToAuthCodeFlow(clientId: string) {
     const verifier = this.generateCodeVerifier(128);
     const challenge = await this.generateCodeChallenge(verifier);
@@ -49,7 +39,7 @@ export class SpotifyAuthService {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", this.redirectUri);
-    params.append("scope", "user-read-private user-read-email");
+    params.append("scope", "user-library-read user-read-private user-read-email");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -75,10 +65,7 @@ export class SpotifyAuthService {
     const { access_token } = await result.json();
     return access_token;
   }
-  
-  /**
-   * Get the currently logged-in user's Spotify profile
-   */
+
   async fetchProfile(token: string): Promise<MixTapeComponent> {
     this.accessToken = token;
     if (!this.accessToken) {

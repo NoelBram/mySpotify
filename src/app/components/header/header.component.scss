@@ -21,6 +21,7 @@
   color: #b73434;
   overflow: hidden;
   white-space: nowrap;
+  align-items: center;
 }
 
 .dorpDownItems {
@@ -53,7 +54,6 @@
 
 @media (max-width: 992px) {
   #header .logo {
-    display: flex;
     align-items: center;
     justify-content: space-between;
     letter-spacing: 1.5px;
@@ -64,6 +64,7 @@
     white-space: nowrap;
     transition: 0.3s;
     position: relative;
+    display: inline-block;
   }
 }
 
@@ -71,11 +72,6 @@
   #header .logo a:hover {
     color: #5f1919;
   }
-}
-.pageLinks {
-  position: sticky;
-  margin-right: 37%;
-  
 }
 
 /*--------------------------------------------------------------
@@ -93,6 +89,12 @@ fa-icon {
   transition: 0.3s;
   font-size: 27px;
   padding-right: 7px;
+}
+
+.spotify{
+  font-style: italic;
+  color: unset;
+  color: #5f1919;
 }
 
 .header-social-links a:hover {

@@ -1,5 +1,5 @@
 body{
-  background-color:#141019;
+  background-color:#310c0c;
   background: radial-gradient(at 50% -20%, #908392, #0d060e) fixed;
 }
 
@@ -8,12 +8,42 @@ main{
   margin-bottom: 410px;
 }
 
-#handboy
-{
+.username{
+  text-align: left;
+  font-weight: 973;
+  font-family: 'Open Sans';
+  letter-spacing: 2px;
+  font-size: 77px;
+  color: #5f1919;
+  padding-left: 30px;
+}
+
+.pageBox{
+  border-radius: 17px;
+  width: 100%;
+  box-shadow: #5f1919;
+
+}
+
+#avatar{
+  color: #c56060;
+  font-size: 27px;
+  border-radius: 17px;
+}
+
+svg{
+  color: rgb(0, 83, 128); 
+  display: inline-block;
+  line-height: 0px;
+  transition: 0.3s;
+  padding-right: 7px;
+  block-size: 27px;
+}
+
+#handboy{
   animation: swing ease-in-out 1.3s infinite alternate;
   transform-origin: 98% 98%;
   transform-box: fill-box;
-  
 }
 
 
