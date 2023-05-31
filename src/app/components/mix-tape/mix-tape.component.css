@@ -31,13 +31,26 @@ main{
   border-radius: 17px;
 }
 
-svg{
-  color: rgb(0, 83, 128); 
+.box{
+  border-radius: 17px;
+  border-width: 0px;
+  padding: 10px 10px 10px 10px;
+  max-width: max-content;
+  background-color: #fee7e7;
+  box-shadow: 3px 3px 2px 1px #efc9c9;
+}
+
+p svg{
+  color: #310c0c; 
   display: inline-block;
   line-height: 0px;
   transition: 0.3s;
   padding-right: 7px;
   block-size: 27px;
+}
+
+p svg:hover{
+  color: #7d4242;
 }
 
 #handboy{
